@@ -1,0 +1,8 @@
+.veh-card{
+    margin-top: 12em;
+    /* margin-right: 10px; */
+    
+}
+.veh-card:hover{
+    zoom: normal;
+}

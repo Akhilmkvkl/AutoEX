@@ -1,0 +1,54 @@
+.ImgHome{
+    width: 100%;
+    height: 42rem;
+    position:absolute;
+    
+}
+.text{
+   
+   position: relative; 
+   color: rgb(0, 0, 0);
+   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+   padding-left: 1em;
+   padding-top: 3.5em;
+   font-size: 69px;
+
+} 
+.branddiv{
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+}
+.section2{
+    position: relative;
+    padding-top: 17em;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+
+
+h2 {
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid #000; 
+    line-height: 0.1em;
+    margin: 10px 0 20px; 
+ } 
+ 
+ h2 span { 
+     background:#fff; 
+     padding:0 10px; 
+ }
+
+ .img_brand{
+    margin-left: 4em;
+    width: 3em;
+    height: 3em;
+ }
+ .brand-list{
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+ }
+ .brand-list::-webkit-scrollbar {
+    display: none;
+  }

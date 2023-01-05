@@ -1,0 +1,15 @@
+.errMsg{
+    background: red;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    letter-spacing: 1.3px;
+}
+
+.successMsg{
+    background: green;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    letter-spacing: 1.3px;
+}

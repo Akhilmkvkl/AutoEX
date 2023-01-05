@@ -1,0 +1,33 @@
+.success{
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    margin-top: 30vh;
+    margin-left: 0vw;
+
+    
+}
+.heading{
+    font-weight: 500;
+    font-size: 15px;
+    margin-left: 36em !important;
+}
+.btn{
+    margin-left: 45em !important;
+    margin-top: 14px !important;
+   
+}
+.image-err{
+    width: 16rem;
+    height: 15rem;
+    margin-top: 5rem;
+ 
+}
+.errmsg{
+    margin-left: 34em !important;
+    width: 16em;
+    /* position: absolute; */
+    
+
+}
