@@ -11,33 +11,47 @@ import IconButton from "@material-ui/core/IconButton";
 import CheckIcon from "@material-ui/icons/Check";
 import BlockIcon from "@material-ui/icons/Block";
 import axios from "axios";
+import { useState } from "react";
+import { axiosAdminInstance } from "../../../instance/axios";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+function AdminListUsers() {
+  const [users, setusers] = useState([]);
+  useEffect(() => {
+    async function getallusers() {
+      try {
+        const res = await axiosAdminInstance.get("/users");
+        console.log(res);
+        setusers(res.data.users);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
- function AdminListUsers() {
-    const users = [
-        {
-          id: 1,
-          name: "John Doe",
-          email: "john@example.com",
-          blocked: false
-        },
-        {
-          id: 2,
-          name: "Jane Doe",
-          email: "jane@example.com",
-          blocked: true
-        },
-        // Add more users here
-      ];
+    getallusers();
+  }, [users]);
+
+  async function block(id) {
+    console.log(id);
+
+    try {
+      const res = await axiosAdminInstance.post("/users/blockuser", { id });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function unblock(id) {
+    console.log(id);
+    try {
+      const res = await axiosAdminInstance.post("/users/unblockuser", { id });
+      console.log(res);
+    } catch (error) {}
+  }
 
   return (
     <div>
-      <div className="mt-56">
+      <div className="mt-48">
         <TableContainer component={Paper} className="container mx-auto px-4">
           <Table className={""} aria-label="simple table">
             <TableHead>
@@ -62,12 +76,24 @@ const useStyles = makeStyles({
                   </TableCell>
                   <TableCell align="right" className="px-4 py-2">
                     <IconButton
-                      color={user.blocked ? "secondary" : "primary"}
+                      color={user.status == "blocked" ? "secondary" : "primary"}
                       onClick={() => {
                         // Implement block/unblock logic here
                       }}
                     >
-                      {user.blocked ? <BlockIcon /> : <CheckIcon />}
+                      {user.status == "blocked" ? (
+                        <BlockIcon
+                          onClick={() => {
+                            unblock(user._id);
+                          }}
+                        />
+                      ) : (
+                        <CheckIcon
+                          onClick={() => {
+                            block(user._id);
+                          }}
+                        />
+                      )}
                     </IconButton>
                   </TableCell>
                 </TableRow>

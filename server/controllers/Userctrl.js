@@ -2,6 +2,7 @@ const Users = require("../modals/user_model");
 const bycrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendMail = require("./Sendmail");
+const News = require("../modals/News_modal");
 
 require("dotenv").config();
 
@@ -181,6 +182,16 @@ const Userctrl = {
         .json({ msg: error.message + "password error aane" });
     }
   },
+  news:async(req,res)=>{
+    try {
+      const news= await News.find()
+      if(news){
+        res.json({msg:"success",news})
+      }
+    } catch (error) {
+      res.json({error})
+    }
+  }
 };
 
 const createactivationToken = (paylod) => {

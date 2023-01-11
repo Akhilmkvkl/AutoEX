@@ -9,5 +9,6 @@ router.post("/login", Userctrl.login);
 router.post("/refresh_Token", Userctrl.getaccessToken);
 router.post("/forgotpassword", Userctrl.forgotPassword);
 router.post("/resetPassword", Auth, Userctrl.resetPassword);
+router.get("/news", Userctrl.news);
 
 module.exports = router;

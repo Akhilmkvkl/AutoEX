@@ -19,7 +19,7 @@ function ViewNews() {
           <Row>
             <Col lg="8" md="8">
               <div className="blog__details">
-                <img src={news.image} />
+                <img src={news.images[0]} />
                 <h1 className="section__title mt-4 text-red-700">{news.title}</h1>
 
                 <div className="blog__publisher d-flex align-items-center gap-4 mb-4">
@@ -28,11 +28,11 @@ function ViewNews() {
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description">
-                    <i className="ri-time-line font-bold"></i> {news.posted}
+                    <i className="ri-time-line font-bold"></i> {news.date}
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description">
-                    <i className="ri-time-line"></i> {news.content}
+                    <i className="ri-time-line"></i> {news.news}
                   </span>
                 </div>
 

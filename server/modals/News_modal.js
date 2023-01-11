@@ -11,9 +11,9 @@ const newsschema = new schema({
         type:String,
         required:true
     },
-    photo:{
-        type:String
-    },
+    images:[
+        
+    ],
     date:{
         type:String
     }

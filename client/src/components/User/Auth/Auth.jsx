@@ -4,8 +4,6 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MovingComponent from "react-moving-text";
-import { dispatchLogin } from "../../../Redux/Actions/AuthActions";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 import {
   showErrorMsg,
@@ -51,7 +49,7 @@ function Auth() {
   const { email, password, err, success } = User;
   const [isSignup, setSignup] = useState(false);
   console.log(isSignup);
-  const dispatch = useDispatch();
+ 
 
   function handleChangeinput(e) {
     const { name, value } = e.target;

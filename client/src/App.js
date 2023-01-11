@@ -14,6 +14,11 @@ import VehicleViewPage from './pages/User/VehicleView/VehicleViewPage';
 import ViewNewspage from './pages/User/News/ViewNewspage';
 import AdminHomepage from  './pages/Admin/Home/AdminHomepage.jsx'
 import UserManagement from './pages/Admin/UserManagement/UserManagement';
+import NewsManagement from './pages/Admin/NewsManagement/NewsManagement';
+import AdminAddnewsManagement from './pages/Admin/NewsManagement/AdminAddnews';
+import VehicleManagement from './pages/Admin/VehicleManagement/VehicleManagement';
+import AddVehicle from './components/Admin/AdminVehicles/AddVehicle';
+import Communitymanagement from './pages/Admin/CommunityManagement/Communitymanagement';
 
 function App() {
   return (
@@ -32,6 +37,14 @@ function App() {
       <Route path='/ViewNews' element={<ViewNewspage/>}></Route>
       <Route path='/Admin-home' element={<AdminHomepage/>}></Route>
       <Route path='/Admin-Users' element={<UserManagement/>}></Route>
+      <Route path='/Admin-news' element={<NewsManagement/>}></Route>
+      <Route path='/Admin-Addnews' element={<AdminAddnewsManagement/>}></Route>
+      <Route path='/Admin-Vehicles' element={<VehicleManagement/>}></Route>
+      <Route path='/AddVehicle' element={<AddVehicle/>}></Route>
+      <Route path='/Admin-Community' element={<Communitymanagement/>}></Route>
+
+
+      
 
       
       </Routes>

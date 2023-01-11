@@ -1,13 +1,9 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
-import './Header.css'
-import { useState } from 'react'
-
-
-
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Header.css";
+import { useState } from "react";
 
 function Header() {
-
   return (
     <div className='head'>
       <nav className="navbar">
@@ -15,7 +11,7 @@ function Header() {
             <Link to={'/'}  className="navbar-logo">
                 AutoEX
             </Link>
-            
+
             <ul className='nav-menu'>
                 <li className='nav-item'>
                     <Link to={'/'}  className='nav-links' >
@@ -48,14 +44,15 @@ function Header() {
                         Signup/login
                     </Link>
                 </li>
-                
-                
+
             </ul>
-            
+
         </div>
       </nav>
-    </div> 
-  )
+    </div>
+
+  
+  );
 }
 
-export default Header
+export default Header;

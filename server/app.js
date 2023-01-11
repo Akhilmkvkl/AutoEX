@@ -9,6 +9,9 @@ const bodyParser = require('body-parser')
 const database=require('./config/Database')
 const Error=require('./middlewares/Error')
 
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}))
+
 const usersRouter = require('./routes/user/user');
 const adminRouter = require('./routes/admin/Admin')
 
