@@ -21,6 +21,10 @@ NOTE: Please read the RUN section before opening an issue.
 >Warning: AutoEx is still in development, constantly being optimized and isn't still stable enough to be used in production environments
 ## Demo
 ![This is an image](/Autoexhome.jpg)
+
+
+
+
 ![This is an image](/autoexlogin.jpg)
 
 A web-based automobile consultation platform usingthe MERN stack, this platform provides details,news, reviews, and communities related toautomobiles (currently concentrated on cars and
