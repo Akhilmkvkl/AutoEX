@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MovingComponent from "react-moving-text";
 import "./Vehicles.css";
-
+import { axiosUserInstance } from "../../../instance/axios";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -9,97 +9,84 @@ import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { FormControl, InputLabel, Select, MenuItem, TextField } from '@material-ui/core';
+
 
 function Vehicles() {
   const navigate = useNavigate();
+  const [Vehicle, setvehicle] = useState([]);
+  const [vehicleBrand, setvehicleBrand] = useState([]);
+  async function getvehicles() {
+    try {
+      const res = await axiosUserInstance.get("/vehicles");
+      if (res) {
+        setvehicle(res.data.veh);
+      }
+    } catch (error) {}
+  }
 
-  const Vehicle = [
-    {
-      name: "Hyundai i20",
-      image:[ "https://stimg.cardekho.com/images/carexteriorimages/630x420/Hyundai/i20/6986/1604567349336/front-left-side-47.jpg?tr=w-456","https://stimg.cardekho.com/images/carexteriorimages/630x420/Hyundai/i20/6986/1604570416881/side-view-(left)-90.jpg?tr=w-456"],
-       
-      price: "Rs.7.07 - 11.62 Lakh*",
-      brand: "Hyundai",
-      transmition: "automatic/manual",
-      power: "123 hp",
-      torque: "100 Nm",
-      type: "hatchback",
-      milage: "24 kmpl",
-      video: "GYab8GZK7_k",
-    },
-    {
-      name: "TATA Nexon",
-      image:[ "https://stimg.cardekho.com/images/carexteriorimages/630x420/Tata/Nexon/7384/1614326304397/front-left-side-47.jpg?tr=w-456","https://stimg.cardekho.com/images/carexteriorimages/630x420/Tata/Nexon/7297/1579769179487/side-view-(left)-90.jpg?tr=w-456"],
-       
-      price: "Rs.7.70 - 14.18 Lakh*",
-      brand: "TATA",
-      transmition: "automatic/manual",
-      power: "120 hp",
-      torque: "115 Nm",
-      type: "Compact-SUV",
-      milage: "20 kmpl",
-      video: "x3JziTgbwM4",
-    },
-    {
-      name: "Mahindra xuv 700",
-      image:[ "https://stimg.cardekho.com/images/carexteriorimages/630x420/Mahindra/XUV700/8629/1659345807519/front-left-side-47.jpg?tr=w-456","https://stimg.cardekho.com/images/carexteriorimages/630x420/Mahindra/XUV700/6806/1631863538634/rear-left-view-121.jpg?tr=w-456"],
-       
-      price: "Rs.13.45 - 24.95 Lakh*",
-      brand: "Mahindra",
-      transmition: "automatic/manual",
-      power: "200 hp",
-      torque: "390 Nm",
-      type: "SUV",
-      milage: "14 kmpl",
-      video: "brm2FjHFBqo",
-    },
-    {
-      name: "Toyota Fortuner",
-      image:[ "https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Fortuner/8241/1609921660871/front-left-side-47.jpg?tr=w-456","https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Fortuner/8241/1609921660871/rear-left-view-121.jpg?tr=w-456"],
-       
-      price: "Rs.32.59 - 50.34 Lakh*",
-      brand: "Toyota",
-      transmition: "automatic",
-      power: "204 hp",
-      torque: "500 Nm",
-      type: "SUV",
-      milage: "9 kmpl",
-      video: "PrROTdfvsaw",
-    },
-    {
-      name: "Volkswagen Virtus",
-      image:["https://stimg.cardekho.com/images/carexteriorimages/630x420/Volkswagen/Virtus/6120/1646726714226/front-left-side-47.jpg?tr=w-456","https://stimg.cardekho.com/images/carexteriorimages/630x420/Volkswagen/Virtus/6120/1646726714226/side-view-(left)-90.jpg?tr=w-456"],
-        
-      price: "Rs.11.32 - 18.42 Lakh*",
-      brand: "Volkswagen",
-      transmition: "automatic/manual",
-      power: "150 hp",
-      torque: "250 Nm",
-      type: "sedan",
-      milage: "10 kmpl",
-      video: "jITZtn--Mbw",
-    },
-    {
-      name: "Skoda Superb",
-      image:["https://stimg.cardekho.com/images/carexteriorimages/630x420/Skoda/Superb/7803/1646110587938/front-left-side-47.jpg?tr=w-456","https://stimg.cardekho.com/images/carexteriorimages/630x420/Skoda/Superb/6764/1590494186274/rear-left-view-121.jpg?tr=w-456"],
-        
-      price: "Rs.34.19 - 37.29 Lakh*",
-      brand: "Skoda",
-      transmition: "automatic",
-      power: "190 hp",
-      torque: "350 Nm",
-      type: "sedan",
-      milage: "14 kmpl",
-      video: "rwKB2OajhVQ",
-    },
-  ];
+  async function getbrand() {
+    try {
+      const res = await axiosUserInstance.get("/brands");
+      if (res) {
+        setvehicleBrand(res.data.brands);
+      }
+    } catch (error) {}
+  }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    try {
+      getvehicles();
+      getbrand();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   function vewVehicle(vehicle) {
-    // console.log(vehicle)
+    
     navigate("/VehicleView", { state: vehicle });
   }
+  const [FilteredVehicles,setFilteredVehicles]=useState([])
+  const [brand, setBrand] = useState('');
+  const [type, setType] = useState('');
+  const [search, setSearch] = useState('');
+
+  const handleBrandChange = event => {
+    setBrand(event.target.value);
+  };
+
+  const handleTypeChange = event => {
+    setType(event.target.value);
+  };
+
+  const handleSearchChange = event => {
+    setSearch(event.target.value);
+  };
+ 
+  const handleApplyFilter = () => {
+    let filteredVehicles = [...Vehicle];
+
+    if (brand) {
+      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.Brand === brand);
+    }
+
+    if (type) {
+      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.Type === type);
+    }
+
+    if (search) {
+      filteredVehicles = filteredVehicles.filter(vehicle => 
+        vehicle.Name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      setFilteredVehicles(filteredVehicles);
+
+    }
+  }
+  
+  
 
   return (
     <div>
@@ -115,7 +102,7 @@ function Vehicles() {
         >
           <img
             className="ImgNews"
-            src="https://wallpapercave.com/dwp2x/wp7395275.jpg"
+            src="https://cdn.wallpapersafari.com/72/96/8nrGd4.jpg"
             alt=""
           />
         </MovingComponent>
@@ -134,8 +121,53 @@ function Vehicles() {
           </h1>
         </MovingComponent>
       </div>
+      <div className="ml-8">
+      <FormControl>
+        <InputLabel id="brand-label">Brand</InputLabel>
+        <Select
+          labelId="brand-label"
+          id="brand-select"
+          value={brand}
+          onChange={handleBrandChange}
+          
+        >
+          <MenuItem value="">
+            <em>All</em>
+          </MenuItem>
+          <MenuItem value="brand1">Brand 1</MenuItem>
+          <MenuItem value="brand2">Brand 2</MenuItem>
+          <MenuItem value="brand3">Brand 3</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl>
+        <InputLabel id="type-label">Type</InputLabel>
+        <Select
+          labelId="type-label"
+          id="type-select"
+          value={type}
+          onChange={handleTypeChange}
+        >
+          <MenuItem value="">
+            <em>All</em>
+          </MenuItem>
+          <MenuItem value="type1">Type 1</MenuItem>
+          <MenuItem value="type2">Type 2</MenuItem>
+          <MenuItem value="type3">Type 3</MenuItem>
+        </Select>
+      </FormControl>
+
+      <TextField
+        id="search"
+        label="Search"
+        value={search}
+        onChange={handleSearchChange}
+      />
+      <button onClick={handleApplyFilter}>Apply Filter</button>
+    </div>
+      
       <div className=" flex flex-wrap grid-cols-3 gap-3 ">
-        {Vehicle.map((vehicles) => {
+        {FilteredVehicles.map((vehicles) => {
           return (
             <div
               className="veh-card"
@@ -148,12 +180,12 @@ function Vehicles() {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={vehicles.image}
+                    image={vehicles.Images[1]}
                     alt="green iguana"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      {vehicles.name}
+                      {vehicles.Name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {vehicles.price}

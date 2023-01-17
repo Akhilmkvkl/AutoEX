@@ -19,6 +19,11 @@ import AdminAddnewsManagement from './pages/Admin/NewsManagement/AdminAddnews';
 import VehicleManagement from './pages/Admin/VehicleManagement/VehicleManagement';
 import AddVehicle from './components/Admin/AdminVehicles/AddVehicle';
 import Communitymanagement from './pages/Admin/CommunityManagement/Communitymanagement';
+import Expertsmanagement from './pages/Admin/ExxpertsManagement/Expertsmanagement';
+import ApplyExperts from './components/User/Experts/ApplyExperts';
+import Forgot from './components/User/Auth/Forgot';
+import SuccessPage from './pages/User/SuccessPage/SuccessPage';
+import FailedPage from './pages/User/FailedPage/FailedPage';
 
 function App() {
   return (
@@ -42,9 +47,18 @@ function App() {
       <Route path='/Admin-Vehicles' element={<VehicleManagement/>}></Route>
       <Route path='/AddVehicle' element={<AddVehicle/>}></Route>
       <Route path='/Admin-Community' element={<Communitymanagement/>}></Route>
+      <Route path='Admin-Experts' element={<Expertsmanagement/>}></Route>
+      <Route path='/applyexpert' element={<ApplyExperts/>}></Route>
+      <Route path='/forgott' element={<Forgot/>}></Route>
+      <Route path='/payment-succes' element={<SuccessPage/>}></Route>
+      <Route path='/payment-failed' element={<FailedPage/>}></Route>
 
 
-      
+
+
+
+
+           
 
       
       </Routes>

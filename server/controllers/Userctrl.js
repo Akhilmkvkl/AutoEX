@@ -3,6 +3,10 @@ const bycrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendMail = require("./Sendmail");
 const News = require("../modals/News_modal");
+const Expert = require("../modals/Experts_modal");
+const vehicle = require("../modals/Vehicle_modal");
+const Brand = require("../modals/Brand_modal");
+const stripe = require('stripe')(process.env.stripe_Testkey)
 
 require("dotenv").config();
 
@@ -85,6 +89,7 @@ const Userctrl = {
           email,
           password,
           status: "registered",
+          isExpert: "no",
         });
         newUser.save();
         res.json({ msg: "Account has been activated successfully!" });
@@ -105,7 +110,9 @@ const Userctrl = {
         return res.status(400).json({ msg: "This email is not registered" });
 
       if (user.status === "blocked")
-        return res.status(400).json({ msg: "Your access is blocked or restricted...!" });
+        return res
+          .status(400)
+          .json({ msg: "Your access is blocked or restricted...!" });
 
       const isMatch = await bycrypt.compare(password, user.password);
       if (!isMatch)
@@ -118,7 +125,7 @@ const Userctrl = {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
-      res.json({ msg: "Login Success" });
+      res.json({ msg: "Login Success",user });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
@@ -142,7 +149,9 @@ const Userctrl = {
   },
   forgotPassword: async (req, res) => {
     try {
-      const { email } = req.body;
+      console.log(req.body)
+      const { email } = req.body.values;
+      console.log(email)
       const user = await Users.findOne({ email: email });
       if (!user)
         return res.status(400).json({ msg: "This email does not exist !" });
@@ -155,6 +164,7 @@ const Userctrl = {
         msg: "Reset password link successfully send please check your email!",
       });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ msg: error.message });
     }
   },
@@ -182,14 +192,74 @@ const Userctrl = {
         .json({ msg: error.message + "password error aane" });
     }
   },
-  news:async(req,res)=>{
+  news: async (req, res) => {
     try {
-      const news= await News.find()
-      if(news){
-        res.json({msg:"success",news})
+      const news = await News.find();
+      if (news) {
+        res.json({ msg: "success", news });
       }
     } catch (error) {
-      res.json({error})
+      res.json({ error });
+    }
+  }, 
+  getexperts:async (req,res)=>{
+    try {
+      const experts= await Expert.find({status:"approved"})
+      res.json({experts})
+
+    } catch (error) {
+      res.json({error:"an error occured"})
+      console.log(error)
+    }
+  },
+  vehicles: async (req, res) => {
+    try {
+      const veh = await vehicle.find();
+      console.log(veh);
+      if (veh) {
+        res.json({ msg: "success", veh });
+      }
+    } catch (error) {
+      res.json({ error: "can't fetch data" });
+      console.log(error);
+    }
+  },
+  brands:async (req,res)=>{
+     try {
+      const brands=await Brand.find()
+      if(brands){
+        res.json({msg:"success",brands})
+      }
+     } catch (error) {
+       res.json({error:{error}})
+     }
+  },
+  payment:async(req,res)=>{
+    try {
+      console.log(req.body)
+      const expert=req.body.expert
+      const user =req.body.userdetails
+      const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: 'inr',
+              product_data: {
+                name: 'AutoEx ',
+              },
+              unit_amount: expert.Rate *100,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${process.env.CLIENT_URL}/payment-succes`,
+        cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
+      });
+    
+      res.send({url:session.url})
+    } catch (error) {
+      console.log(error);
     }
   }
 };

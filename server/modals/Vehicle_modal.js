@@ -26,6 +26,10 @@ const vehicleschema = new schema({
     type: String,
     required: true,
   },
+  price:{
+    type: String,
+    required: true,
+  },
   Fueltype: {
     type: String,
     required: true,

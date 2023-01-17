@@ -1,6 +1,11 @@
 import React from 'react'
 import MovingComponent from "react-moving-text";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom"; 
+
 function Communities() {
+ 
+
   return (
     <div>
         <div className="image">
@@ -15,7 +20,7 @@ function Communities() {
         >
           <img
             className="ImgNews"
-            src="https://wallpapercave.com/dwp2x/wp3647903.jpg"
+            src="https://wallpaperaccess.com/full/690719.jpg"
             alt=""
           />
         </MovingComponent>

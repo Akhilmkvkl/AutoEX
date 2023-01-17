@@ -124,6 +124,9 @@ function AddVehicle() {
             <Form.Item name="Power" label="Power">
               <TextArea placeholder="Power" cols={70} />
             </Form.Item>
+            <Form.Item name="price" label="price">
+              <TextArea placeholder="price" cols={70} />
+            </Form.Item>
             <Form.Item name="Torque" label="Torque">
               <TextArea placeholder="Torque" cols={70} />
             </Form.Item>
@@ -153,6 +156,7 @@ function AddVehicle() {
                 onChange={handleChange}
                 multiple
                 listType="picture-card"
+                accept="jpg"
               >
                 <div>
                   <PlusOutlined />
@@ -179,3 +183,4 @@ function AddVehicle() {
 }
 
 export default AddVehicle;
+ 

@@ -1,18 +1,17 @@
 import React from "react";
 import "./ViewNews.css";
-import { Container, Row, Col, Form, FormGroup, Input } from "reactstrap"
+import { Container, Row, Col, Form, FormGroup, Input } from "reactstrap";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+
+
 function ViewNews() {
   const location = useLocation();
   const news = location.state;
   console.log(news);
 
-    
   return (
-
- 
-
-
     <div className="news">
       <section>
         <Container>
@@ -20,11 +19,13 @@ function ViewNews() {
             <Col lg="8" md="8">
               <div className="blog__details">
                 <img src={news.images[0]} />
-                <h1 className="section__title mt-4 text-red-700">{news.title}</h1>
+                <h1 className="section__title mt-4 text-red-700">
+                  {news.title}
+                </h1>
 
                 <div className="blog__publisher d-flex align-items-center gap-4 mb-4">
                   <span className="blog__author">
-                    <i className="ri-user-line"></i> 
+                    <i className="ri-user-line"></i>
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description">

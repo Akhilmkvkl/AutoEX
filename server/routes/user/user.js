@@ -10,5 +10,10 @@ router.post("/refresh_Token", Userctrl.getaccessToken);
 router.post("/forgotpassword", Userctrl.forgotPassword);
 router.post("/resetPassword", Auth, Userctrl.resetPassword);
 router.get("/news", Userctrl.news);
+router.get('/experts',Userctrl.getexperts)
+router.get('/vehicles',Userctrl.vehicles)
+router.get('/brands',Userctrl.brands)
+router.post('/payment/stripe',Userctrl.payment)
+
 
 module.exports = router;

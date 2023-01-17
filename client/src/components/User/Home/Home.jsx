@@ -1,8 +1,29 @@
 import React from "react";
 import "./Home.css";
 import MovingComponent from "react-moving-text";
+import { useEffect } from "react";
+import { axiosUserInstance } from "../../../instance/axios";
+import { useState } from "react";
 
 function Home() {
+  const [brands, setbrands] = useState([]);
+  const getbrand = async () => {
+    try {
+      const res = await axiosUserInstance.get("/brands");
+      if (res) {
+        setbrands(res.data.brands);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getbrand();
+  }, []);
+
+  console.log(brands);
+
   return (
     <div>
       <div>
@@ -18,7 +39,7 @@ function Home() {
           >
             <img
               className="ImgHome"
-              src="https://4kwallpapers.com/images/wallpapers/maserati-mc20-sports-cars-white-background-2021-5k-8k-2560x1080-2694.jpg"
+              src="https://cdn.wallpapersafari.com/49/42/ZyMNbO.jpg"
               alt=""
             />
           </MovingComponent>
@@ -48,86 +69,18 @@ function Home() {
           iteration="1"
           fillMode="none"
         >
-          <h2>
-            <span>Brands</span>
-          </h2>
+          {/* <h2><span>Brands</span></h2> */}
 
-          <div  className="brand-list" >
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/bmw.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/ios/2x/volkswagen.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/mercedes-benz.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/hyundai.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/suzuki.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/jeep.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/kia.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/toyota.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/nissan.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/lamborghini.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/land-rover.png"
-              alt="jj"
-            ></img>{" "}
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/kia.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/toyota.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/nissan.png"
-              alt="jj"
-            />
-            <img
-              className="img_brand"
-              src="https://img.icons8.com/color/2x/lamborghini.png"
-              alt="jj"
-            />
+          <div className="brand-list">
+            {brands.map((brand) => {
+              return (
+                <img
+                  className="img_brand"
+                  src={brand.icon}
+                  alt={brand.Brandname}
+                />
+              );
+            })}
           </div>
         </MovingComponent>
 

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MovingComponent from "react-moving-text";
 import axios from "axios";
+import {useDispatch} from'react-redux';
+import {userLoginDetails} from '../../../Redux/adminReducer'
 import {
   showErrorMsg,
   showSuccessMsg,
@@ -35,6 +37,7 @@ const initialState2 = {
 };
 function Auth() {
   const navigate = useNavigate();
+  const Dispatch=useDispatch()
   const [User, setUser] = useState(initialState);
   const [user, setnewUser] = useState(initialState2);
   const {
@@ -68,8 +71,10 @@ function Auth() {
       console.log(res);
 
       setUser({ ...User, err: "", success: res.data.msg });
-      localStorage.setItem("firstlogin", true);
-      dispatch(dispatchLogin())
+      localStorage.setItem("firstlogin", true,"user",);
+      const user=res.data.user
+      console.log(user)
+      Dispatch(userLoginDetails(user))
       navigate("/");
     } catch (error) {
       error.response.data.msg &&
@@ -241,7 +246,10 @@ function Auth() {
               >
                 Login
               </Button>
+              <div className="ml-20">
 
+             <Link to={'/forgott'}>forgott password?</Link>
+              </div>
               <Button onClick={resetState} className="button1">
                 {isSignup ? "Login Here" : "Signup here"}
               </Button>

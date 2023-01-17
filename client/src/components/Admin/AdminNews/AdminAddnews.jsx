@@ -18,6 +18,7 @@ import { message } from "antd";
 import { axiosAdminInstance, axiosUserInstance } from "../../../instance/axios";
 import { showSuccessMsg } from "../../Utils/Notifications/Notification";
 
+
 function AdminAddnews() {
  
   const { TextArea } = Input;
@@ -28,8 +29,9 @@ function AdminAddnews() {
 
   const handleChange = ({ fileList }) => setImages(fileList);
 
-
+     
   async function submit() {
+  // console.log(images)
     const values = form.getFieldsValue();
     console.log(values);
     const formData = new FormData();
@@ -75,12 +77,13 @@ function AdminAddnews() {
 
           <Form.Item name="image" label="">
             <Upload
+            onChange={handleChange}
               name="images"
-              valuePropName="fileList"
-              onChange={handleChange}
+              valuePropName=""
               multiple
               listType="picture-card"
-            >
+             
+            > 
               <div>
                 <PlusOutlined />
                 <div
@@ -90,7 +93,7 @@ function AdminAddnews() {
                 >
                   Upload
                 </div>
-              </div>
+              </div> 
             </Upload>
           </Form.Item>
           <Form.Item label="">

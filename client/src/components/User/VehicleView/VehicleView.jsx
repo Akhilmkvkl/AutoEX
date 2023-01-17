@@ -6,8 +6,13 @@ import { Container, Row } from "reactstrap";
 import YouTube from "react-youtube";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
 import { MDBCarousel, MDBCarouselItem } from "mdb-react-ui-kit";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function VehicleView() {
+  const navigate = useNavigate();
+  
+
   const location = useLocation();
   const vehicles = location.state;
   console.log(vehicles);
@@ -29,7 +34,7 @@ function VehicleView() {
         <Container>
           <Row>
             <Col lg="6">
-              <img src={vehicles.image[0]} alt="" className="w-100" />
+              <img src={vehicles.Images[1]} alt="" className="w-100" />
               {/* {vehicles.image.forEach((images) => {
                 <MDBCarousel showIndicators showControls fade>
                   <MDBCarouselItem
@@ -43,7 +48,7 @@ function VehicleView() {
             </Col>
             <Col>
               <div className="">
-                <h1>{vehicles.name}</h1>
+                <h1>{vehicles.Name}</h1>
 
                 <div className=" d-flex align-items-center gap-5 mb-4 mt-3">
                   <h6 className="rent__price fw-bold fs-4 text-red-700">
@@ -58,11 +63,11 @@ function VehicleView() {
                       <i className="ri-star-s-fill"></i>
                       <i className="ri-star-s-fill"></i>
                     </span>
-                    (2.2 ratings)
+                    {/* (2.2 ratings) */}
                   </span>
                 </div>
 
-                <p className="section__description fw-bold">{vehicles.brand}</p>
+                <p className="section__description fw-bold">{vehicles.Brand}</p>
 
                 <div
                   className=" d-flex align-items-center mt-3"
@@ -73,7 +78,7 @@ function VehicleView() {
                       className="ri-roadster-line"
                       style={{ color: "#f9a826" }}
                     ></i>{" "}
-                    {vehicles.transmition}
+                    {vehicles.Fueltype}
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description fw-bold">
@@ -89,7 +94,7 @@ function VehicleView() {
                       className="ri-timer-flash-line"
                       style={{ color: "#f9a826" }}
                     ></i>{" "}
-                    {vehicles.torque}
+                    {vehicles.Torque}
                   </span>
                 </div>
 
@@ -102,7 +107,7 @@ function VehicleView() {
                       className="ri-map-pin-line"
                       style={{ color: "#f9a826" }}
                     ></i>{" "}
-                    {vehicles.type}
+                    {vehicles.Type}
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description fw-bold">
@@ -110,7 +115,7 @@ function VehicleView() {
                       className="ri-wheelchair-line"
                       style={{ color: "#f9a826" }}
                     ></i>{" "}
-                    {vehicles.milage}
+                    {vehicles.Mileage}
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description fw-bold">
@@ -118,10 +123,7 @@ function VehicleView() {
                       className="ri-building-2-line"
                       style={{ color: "#f9a826" }}
                     >
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s, when an unknown
-                      printer took
+                     {vehicles.Description}
                     </i>{" "}
                   </span>
                 </div>
@@ -142,27 +144,27 @@ function VehicleView() {
             <MDBTableBody>
               <tr>
                 <td>Price</td>
-                <td>@mdo</td>
+                <td>{vehicles.price}</td>
               </tr>
               <tr>
                 <td>Engine</td>
-                <td>@fat</td>
+                <td>{vehicles.Engine}</td>
               </tr>
               <tr>
-                <td>Safety</td>
-                <td>@fat</td>
+                <td>Seats</td>
+                <td>{vehicles.Seats}</td>
               </tr>
               <tr>
-                <td>Transmission</td>
-                <td>@fat</td>
+                <td>Cyliders</td>
+                <td>{vehicles.Cylinders}</td>
               </tr>
               <tr>
                 <td>Fuel Type</td>
-                <td>@fat</td>
+                <td>{vehicles.Fueltype}</td>
               </tr>
               <tr>
-                <td>FSeating Capacity</td>
-                <td>@fat</td>
+                <td>Engine</td>
+                <td>{vehicles.Engine}</td>
               </tr>
             </MDBTableBody>
           </MDBTable>
@@ -171,7 +173,7 @@ function VehicleView() {
 
       <div className="video">
         <YouTube
-          videoId={vehicles.video}
+          videoId={vehicles.Video}
           opts={opts}
           onReady={() => console.log("Video is ready!")}
         />

@@ -12,7 +12,12 @@ const News = require("../modals/News_modal");
 const Brand = require("../modals/Brand_modal");
 const vehicle = require("../modals/Vehicle_modal");
 const Community = require("../modals/Community_modal");
+const Expert = require("../modals/Experts_modal");
 const parser = new DatauriParser();
+const FileReader = require("filereader");
+const Buffer = require("buffer/").Buffer;
+const sharp = require("sharp");
+const Jimp = require("jimp");
 
 const Adminctrl = {
   login: async (req, res) => {
@@ -84,13 +89,21 @@ const Adminctrl = {
       const dataimages = [];
       const bar = new Promise((resolve, reject) => {
         images.forEach(async (image, index, array) => {
-          console.log(image);
-          const datas = await uploadToCloudinary(image.thumbUrl, "news-images");
+          // console.log(image);
+
+          const pngThumbUrl = image.thumbUrl;
+
+          const buffer = new Buffer.from(pngThumbUrl, 'base64');
+
+
+
+
+          const datas = await uploadToCloudinary(pngThumbUrl, "news-images");
 
           console.log(datas.url);
 
           dataimages.push(datas.url);
-
+ 
           if (index === array.length - 1) resolve();
         });
       });
@@ -120,6 +133,13 @@ const Adminctrl = {
     } catch (error) {
       res.json({ error });
     }
+  },
+  deletenews: async (req, res) => {
+    try {
+      const id = req.body.id;
+      const dnews = await News.deleteOne({ _id: ObjectId(id) });
+      res.json({ msg: "success" });
+    } catch (error) {}
   },
   addBrand: async (req, res) => {
     try {
@@ -174,6 +194,7 @@ const Adminctrl = {
           Torque: data.Torque,
           Seats: data.Seats,
           Mileage: data.Mileage,
+          price:data.price,
           Images: dataimages,
         });
         vehicledetails.save().then(() => {
@@ -185,58 +206,176 @@ const Adminctrl = {
       res.json({ error: "an error occured" });
     }
   },
-  vehicles:async(req,res)=>{
+  vehicles: async (req, res) => {
     try {
-     const veh= await vehicle.find()
-     console.log(veh)
-     if(veh){
-      res.json({msg:"success",veh})
-     }
-    } catch (error) {
-      res.json({error:"can't fetch data"})
-      console.log(error)
-    }
-  },
-  brands:async (req,res)=>{
-    try {
-      const brands=await Brand.find()
-      if (brands){
-        res.json({msg:"success",brands})
+      const veh = await vehicle.find();
+      console.log(veh);
+      if (veh) {
+        res.json({ msg: "success", veh });
       }
     } catch (error) {
-      console.log(error)
-      res.json({error:"can't fetch details"})
+      res.json({ error: "can't fetch data" });
+      console.log(error);
     }
   },
-  addCommunity:async(req,res)=>{
+  brands: async (req, res) => {
     try {
-      console.log(req.body)
-      const data=req.body.values
-      const communitydata=new Community({
-        name:data.name,
-        link:data.link,
-        platform:data.platform,
-        decription:data.description
-      })
-      communitydata.save()
-      .then(()=>{
-        res.json({msg:"success"})
-      })
+      const brands = await Brand.find();
+      if (brands) {
+        res.json({ msg: "success", brands });
+      }
     } catch (error) {
-      console.log(error)
-      res.json({error:"faild to fetch"})
+      console.log(error);
+      res.json({ error: "can't fetch details" });
     }
   },
-  getcommunity:async(req,res)=>{
-   try {
-    const community= await Community.find()
-    if(community){
-      res.json({msg:"success",community})
+  addCommunity: async (req, res) => {
+    try {
+      console.log(req.body);
+      const data = req.body.values;
+      const communitydata = new Community({
+        name: data.name,
+        link: data.link,
+        platform: data.platform,
+        decription: data.description,
+      });
+      communitydata.save().then(() => {
+        res.json({ msg: "success" });
+      });
+    } catch (error) {
+      console.log(error);
+      res.json({ error: "faild to fetch" });
     }
-   } catch (error) {
-    res.json({error:"error"})
-    console.log(error)
-   }
+  },
+  getcommunity: async (req, res) => {
+    try {
+      const community = await Community.find();
+      if (community) {
+        res.json({ msg: "success", community });
+      }
+    } catch (error) {
+      res.json({ error: "error" });
+      console.log(error);
+    }
+  },
+  applyexpert: async (req, res) => {
+    {
+      try {
+        // console.log(req.body[0])
+        const data = req.body[0];
+
+        const userdata = data[1];
+        const applicationdata = data[0];
+        // console.log(applicationdata)
+
+        const avatarimg = applicationdata.Avatar.fileList;
+        const applicationimg = applicationdata.Documents.fileList;
+
+        console.log(avatarimg);
+        const avatarimages = [];
+        const docimages = [];
+        const bar = new Promise((resolve, reject) => {
+          avatarimg.forEach(async (image, index, array) => {
+            console.log(image);
+            const datas = await uploadToCloudinary(image.thumbUrl, "profile");
+
+            console.log(datas.url);
+
+            avatarimages.push(datas.url);
+
+            if (index === array.length - 1) resolve();
+          });
+        });
+        bar.then(() => {
+          const doc = new Promise((resolve, reject) => {
+            applicationimg.forEach(async (image, index, array) => {
+              console.log(image);
+              const datas = await uploadToCloudinary(
+                image.thumbUrl,
+                "Documents"
+              );
+
+              console.log(datas.url);
+
+              docimages.push(datas.url);
+
+              if (index === array.length - 1) resolve();
+            });
+          });
+          doc.then(() => {
+            const applydetails = new Expert({
+              ExpertId: userdata._id,
+              Expertname: userdata.name,
+              Rate: applicationdata.Rate,
+              phone: applicationdata.Phone,
+              about: applicationdata.about,
+              status: "applied",
+              Document: docimages,
+              profile: avatarimages,
+            });
+            applydetails.save().then(() => {
+              res.json({ msg: "success" });
+            });
+          });
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+  getExpert: async (req, res) => {
+    try {
+      const experts = await Expert.find();
+      if (experts) {
+        res.json({ msg: "success", experts });
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({ error: "can't fetch data" });
+    }
+  },
+  acceptExpert: async (req, res) => {
+    try {
+      console.log(req.body);
+      const id = req.body.id;
+      Expert.updateOne(
+        { _id: ObjectId(id) },
+        { $set: { status: "approved" } }
+      ).then(async () => {
+        const response = await Expert.findOne({ _id: ObjectId(id) });
+        if (response) {
+          console.log(response);
+          Users.updateOne(
+            { _id: ObjectId(response.ExpertId) },
+            { $set: { isExpert: "yes" } }
+          )
+          .then(()=>{
+            res.json({ msg: "Expert approved" });
+          }).catch((error)=>{
+            console.log(error)
+          })
+          
+        }
+      });
+    } catch (error) {
+      res.json({ error: "an error occured" });
+      console.log(error);
+    }
+  },
+  blockExpert: async (req, res) => {
+    try {
+      console.log(req.body);
+      const id = req.body.id;
+      Expert.updateOne(
+        { _id: ObjectId(id) },
+        { $set: { status: "blocked" } }
+      ).then(() => {
+        res.json({ msg: "Expert Blocked" });
+      });
+    } catch (error) {
+      res.json({ error: "an error occured" });
+      console.log(error);
+    }
   },
 };
 

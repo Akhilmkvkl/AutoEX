@@ -16,6 +16,9 @@ const userschema = new schema({
   status: {
     type: String,
   },
+  isExpert:{
+    type:String
+  }
 });
 
 const Users = mongoose.model("users", userschema);

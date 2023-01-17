@@ -6,12 +6,17 @@ import { Col } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { axiosUserInstance } from "../../../instance/axios";
+import { useSelector } from "react-redux";
 
 function News() {
   const navigate = useNavigate();
   const [news, setnews] = useState([]);
+  
+ 
 
   useEffect(() => {
+   
+
     async function getnews() {
       const res = await axiosUserInstance.get("/news");
       setnews(res.data.news);
@@ -58,10 +63,10 @@ function News() {
         </MovingComponent>
       </div>
 
-      <div className="news">
+      <div className="flex flex-wrap">
         {news.map((news) => {
           return (
-            <div>
+            <div className="news" style={{ width: "26em" }}>
               <Col className="mb-5">
                 <div className="blog__item">
                   <img src={news.images[0]} alt="" className="w-100" />

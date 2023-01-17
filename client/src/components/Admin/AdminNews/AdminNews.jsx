@@ -4,12 +4,11 @@ import { Await, Link } from "react-router-dom";
 import { axiosAdminInstance } from "../../../instance/axios";
 import { Col } from "reactstrap";
 import { useNavigate } from "react-router-dom";
+import {DeleteOutlined} from'@ant-design/icons'
 
 function AdminNews() {
   const [news, setnews] = useState([]);
-
-  // useEffect(async () => {
-   async function getnews(){
+  async function getnews(){
     const res = await axiosAdminInstance.get("/news");
     if (res) {
       console.log(res);
@@ -17,10 +16,21 @@ function AdminNews() {
     }
    }
 
-   getnews()
-    
-  // }, []);
+  useEffect( () => {
+  
 
+    getnews()
+    
+  }, [deletenews]);
+  async function deletenews(id){
+    try {
+      console.log(id)
+    const dnews= await  axiosAdminInstance.post('/deletenews',{id})
+    console.log(dnews)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   return (
@@ -29,10 +39,10 @@ function AdminNews() {
         <Button type="primary">Add News</Button>
       </Link>
       <div>
-        <div className="news">
+        <div className="flex flex-wrap">
           {news.map((news) => {
             return (
-              <div>
+              <div className="news" style={{width:"26em"}}>
                 <Col className="mb-5">
                   <div className="blog__item">
                     <img src={news.images[0]} alt="" className="w-100" />
@@ -62,7 +72,7 @@ function AdminNews() {
 
                       <div className="blog__time pt-3 mt-3 d-flex align-items-center justify-content-between">
                         <span className="blog__author">
-                          {/* <i class="ri-user-line"></i> {author} */}
+                        <DeleteOutlined onClick={()=>{deletenews(news._id)}} />
                         </span>
 
                         <div className=" d-flex align-items-center gap-3">
