@@ -1,7 +1,7 @@
 import React from 'react'
 import Footer from '../../../components/User/Footer/Footer'
 import Header from  '../../../components/User/Header/Header'
-import Reviews from '../../../components/User/Reviews/Reviews'
+
 import VehicleView from '../../../components/User/VehicleView/VehicleView'
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ function VehicleViewPage() {
     <div>
         <Header/>
         <VehicleView/>
-        <Reviews/>
+        
         <Footer/>
         
     </div>

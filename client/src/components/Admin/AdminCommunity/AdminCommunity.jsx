@@ -128,7 +128,7 @@ function AdminCommunity() {
       }
     }
     getCommunity();
-  }, []);
+  }, [deletecommunity]);
 
   const onCreate = async (values) => {
     console.log("Received values of form: ", values);
@@ -144,6 +144,14 @@ function AdminCommunity() {
     platform: "",
     // Brand: "",
   });
+
+  async function deletecommunity(id){
+    try {
+      axiosAdminInstance.post('/deletecomm',{id})
+    } catch (error) {
+      
+    }
+  }
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -204,17 +212,6 @@ function AdminCommunity() {
                       onChange={handleFilterChange}
                     />
 
-                    {/* <MatSelect
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    value={filters.platform}
-                    onChange={handleFilterChange}
-                    label="platform">
-                     {platforms.map((platfrom)=>{
-                        <MenuItem >{platfrom.platform}</MenuItem>
-                     })}
-
-                    </MatSelect> */}
 
                    
                   </TableCell>
@@ -230,17 +227,12 @@ function AdminCommunity() {
                       {community.name}
                     </TableCell>
                     <TableCell>{community.platform}</TableCell>
-                    {/* <TableCell>{car.Brand}</TableCell> */}
-                    {/* <TableCell>
-                          <img
-                            className="w-14 h-12"
-                            src={car.Images[1]}
-                            alt={car.name}
-                          />
-                        </TableCell> */}
+                   
                     <TableCell>
-                      {/* <EditIcon /> */}
+                      <div onClick={()=>{deletecommunity(community._id)}}>
                       <DeleteIcon />
+
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

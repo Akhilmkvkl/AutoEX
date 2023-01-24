@@ -1,55 +1,85 @@
-let createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-let mongoose = require('mongoose')
+let createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+let mongoose = require("mongoose");
 const app = express();
-const bodyParser = require('body-parser')
-const database=require('./config/Database')
-const Error=require('./middlewares/Error')
+const bodyParser = require("body-parser");
+const database = require("./config/Database");
+const Error = require("./middlewares/Error");
+const { ObjectId } = require("mongodb");
 
-app.use(bodyParser.json({limit: "50mb"}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}))
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 
-const usersRouter = require('./routes/user/user');
-const adminRouter = require('./routes/admin/Admin')
+const usersRouter = require("./routes/user/user");
+const adminRouter = require("./routes/admin/Admin");
+const Userctrl = require("./controllers/Userctrl");
+const Session = require("./modals/Session_modal");
 
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors())
+app.use("/users", usersRouter);
+app.use("/admin", adminRouter);
 
-app.use('/users',usersRouter );
-app.use('/admin',adminRouter)
-
-// app.use(database)
-
-app.use(Error)
-
-  
-
-
-
-
-
+const PORT = process.env.PORT || 4000;
 
 
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
+app.use(Error);
 
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+// Socket io
+const server = require("http").Server(app);
 
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+
+// const io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("sendMessage",async (data) => { 
+     console.log(data)
+     
+     console.log(data[1]);
+     const message = data[0];
+     const sessionid = data[1];
+     console.log(sessionid.sessionId);
+      
+     const session = await Session.findOne({
+       _id: ObjectId(sessionid.sessionId),
+     });
+
+     session.messages.push(message);
+
+     await session.save().then(async() => {
+      const session = await Session.findOne({ _id: ObjectId(sessionid.sessionId) });
+      if (session) {
+        console.log(session);
+        socket.emit('sessions', session);
+      }
+
+       console.log("success");
+     });
+    
+   
+  });
+
+});
 
 
 mongoose
@@ -61,13 +91,8 @@ mongoose
     console.log("failed to connect database");
   });
 
-
-
- 
-  const PORT = process.env.PORT || 4000
-  app.listen(PORT, () => {
-      console.log('Server is running on port', PORT)
-  })
-
+server.listen(PORT, () => {
+  console.log("Server is running on port", PORT);
+});
 
 module.exports = app;

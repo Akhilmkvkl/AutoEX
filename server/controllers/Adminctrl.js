@@ -369,14 +369,47 @@ const Adminctrl = {
       Expert.updateOne(
         { _id: ObjectId(id) },
         { $set: { status: "blocked" } }
-      ).then(() => {
+      ).then((data) => {
+        console.log(data)
+        Users.updateOne(
+          { _id: ObjectId(id) },
+          { $set: { isExpert: "no" } }
+        )
+        .then(()=>{
         res.json({ msg: "Expert Blocked" });
+             
+        })
       });
     } catch (error) {
       res.json({ error: "an error occured" });
       console.log(error);
     }
   },
+  deletecar:async (req,res)=>{
+    try {
+      const id=req.body.id
+
+      vehicle.deleteOne({_id:ObjectId(id)})
+      .then(()=>{
+        res.json({msg:"vehicle deleted successfully"})
+      })
+    } catch (error) {
+      
+      console.log(error)
+      res.json({error})
+    }
+  },
+  deletecommunity: async (req,res)=>{
+    try {
+       const id =req.body.id
+       Community.deleteOne({_id:ObjectId(id)})
+       .then(()=>{
+        res.json({msg:"successfully removed community"})
+       })
+    } catch (error) {
+      res.json({error})
+    }
+  }
 };
 
 module.exports = Adminctrl;

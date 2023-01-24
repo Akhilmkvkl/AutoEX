@@ -103,7 +103,16 @@ function AdminVehicle() {
       }
     }
     getvehicle();
-  }, []);
+  }, [deletecar]);
+
+  async  function deletecar(id){
+     try {
+       console.log(id)
+       axiosAdminInstance.post('/deletecar',{id})
+     } catch (error) {
+      
+     }
+  }
 
   const classes = useStyles();
   const [filters, setFilters] = useState({
@@ -214,7 +223,7 @@ function AdminVehicle() {
                         </TableCell>
                         <TableCell>
                           <EditIcon />
-                          <DeleteIcon />
+                        <div onClick={()=>{deletecar(car._id)}}>  <DeleteIcon  /></div>
                         </TableCell>
                       </TableRow>
                     )

@@ -8,6 +8,7 @@ import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
 import { MDBCarousel, MDBCarouselItem } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Reviews from '../../../components/User/Reviews/Reviews'
 
 function VehicleView() {
   const navigate = useNavigate();
@@ -178,6 +179,7 @@ function VehicleView() {
           onReady={() => console.log("Video is ready!")}
         />
       </div>
+      <Reviews {...vehicles}/>
     </div>
   );
 }

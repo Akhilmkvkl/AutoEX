@@ -6,11 +6,16 @@ const News = require("../modals/News_modal");
 const Expert = require("../modals/Experts_modal");
 const vehicle = require("../modals/Vehicle_modal");
 const Brand = require("../modals/Brand_modal");
-const stripe = require('stripe')(process.env.stripe_Testkey)
-
-require("dotenv").config();
-
+const Reviews = require("../modals/Review_modal");
+const stripe = require("stripe")(process.env.stripe_Testkey);
+const Community = require("../modals/Community_modal");
+const Session = require("../modals/Session_modal");
+const { ObjectId } = require("mongodb");
 const { CLIENT_URL } = process.env;
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 const Userctrl = {
   register: async (req, res) => {
@@ -125,7 +130,7 @@ const Userctrl = {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
-      res.json({ msg: "Login Success",user });
+      res.json({ msg: "Login Success", user });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
@@ -149,9 +154,9 @@ const Userctrl = {
   },
   forgotPassword: async (req, res) => {
     try {
-      console.log(req.body)
+      console.log(req.body);
       const { email } = req.body.values;
-      console.log(email)
+      console.log(email);
       const user = await Users.findOne({ email: email });
       if (!user)
         return res.status(400).json({ msg: "This email does not exist !" });
@@ -164,7 +169,7 @@ const Userctrl = {
         msg: "Reset password link successfully send please check your email!",
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return res.status(500).json({ msg: error.message });
     }
   },
@@ -201,15 +206,14 @@ const Userctrl = {
     } catch (error) {
       res.json({ error });
     }
-  }, 
-  getexperts:async (req,res)=>{
+  },
+  getexperts: async (req, res) => {
     try {
-      const experts= await Expert.find({status:"approved"})
-      res.json({experts})
-
+      const experts = await Expert.find({ status: "approved" });
+      res.json({ experts });
     } catch (error) {
-      res.json({error:"an error occured"})
-      console.log(error)
+      res.json({ error: "an error occured" });
+      console.log(error);
     }
   },
   vehicles: async (req, res) => {
@@ -224,44 +228,177 @@ const Userctrl = {
       console.log(error);
     }
   },
-  brands:async (req,res)=>{
-     try {
-      const brands=await Brand.find()
-      if(brands){
-        res.json({msg:"success",brands})
-      }
-     } catch (error) {
-       res.json({error:{error}})
-     }
-  },
-  payment:async(req,res)=>{
+  brands: async (req, res) => {
     try {
-      console.log(req.body)
-      const expert=req.body.expert
-      const user =req.body.userdetails
+      const brands = await Brand.find();
+      if (brands) {
+        res.json({ msg: "success", brands });
+      }
+    } catch (error) {
+      res.json({ error: { error } });
+    }
+  },
+  payment: async (req, res) => {
+    try {
+      console.log(req.body);
+      const expert = req.body.expert;
+      console.log(expert._id);
+      const expertId = expert.ExpertId;
+      const user = req.body.userdetails;
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
             price_data: {
-              currency: 'inr',
+              currency: "inr",
               product_data: {
-                name: 'AutoEx ',
+                name: "AutoEx ",
               },
-              unit_amount: expert.Rate *100,
+              unit_amount: expert.Rate * 100,
             },
             quantity: 1,
           },
         ],
-        mode: 'payment',
-        success_url: `${process.env.CLIENT_URL}/payment-succes`,
+        mode: "payment",
+        success_url: `${process.env.CLIENT_URL}/payment-succes?session_id={CHECKOUT_SESSION_ID}&expertid=${expertId}`,
         cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
       });
-    
-      res.send({url:session.url})
+
+      res.send({ url: session.url });
     } catch (error) {
       console.log(error);
     }
-  }
+  },
+  paymentsuccess: async (req, res) => {
+    try {
+      const redirectUrl = req.body.succesurl;
+      const userdetails = req.body.userdetails;
+
+      console.log(redirectUrl);
+      const datenow = new Date();
+      const sessionDate = datenow.toDateString();
+
+      const url = new URL(redirectUrl);
+      const sessionId = url.searchParams.get("session_id");
+      const expertId = url.searchParams.get("expertid");
+      const userId = userdetails._id;
+      // console.log(sessionId);
+      console.log(expertId);
+      const expert = await Expert.findOne({ExpertId:ObjectId(expertId)})
+      console.log(expert,"this is expert")
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      console.log(session.status); // "succeeded" or "canceled"
+      if (session.status === "complete") {
+        console.log("payment is successful ");
+        // Payment was successful, you can update the user's payment status in your database
+
+        const sessiodetails = new Session({
+          bookedTime: sessionDate,
+          payment: "Done",
+          user:userdetails.name,
+          expertName: expert.Expertname,
+          members: [userId, expertId],
+        });
+
+        sessiodetails.save().then(() => { 
+          res.json({ msg: "success fully created a session" });
+        });
+      } else {
+        console.log("payment failed");
+        res.json({ msg: "an error occures please try again" });
+        // Payment was not successful, you can redirect the user to an error page or show an error message
+      }
+    } catch (error) {}
+  },
+  postReview: async (req, res) => {
+    try {
+      console.log(req.body);
+      const details = req.body;
+      const reviewdetails = new Reviews({
+        rating: details.values.rating,
+        review: details.values.review,
+        vehicleid: details.cardetails._id,
+        vehiclename: details.cardetails.Name,
+        postedby: req.body.userdetails.name,
+      });
+      reviewdetails.save().then(() => {
+        res.json({ msg: "successfully posted Review" });
+      });
+    } catch (error) {
+      console.log(error);
+      res.json({ msg: "an error occured" });
+    }
+  },
+  review: async (req, res) => {
+    try {
+      const name = req.body.name;
+      const reviews = await Reviews.find({ vehiclename: name });
+      if (reviews) {
+        res.json({ msg: "success", reviews });
+      }
+    } catch (error) {}
+  },
+  community: async (req, res) => {
+    try {
+      const community = await Community.find();
+      res.json({ community });
+    } catch (error) {}
+  },
+  sessions: async (req, res) => {
+    try {
+      const id = req.body.userid;
+     
+      console.log(id);
+      const session = await Session.find({ members: id  });
+      if (session) {
+        console.log(session)
+        // const expert = session.members[1];
+        // const expertdetails = await Expert.findOne({
+        //   ExpertId: ObjectId(expert),
+        // });
+        // if (expertdetails) console.log(expertdetails.Expertname);
+        // const expertname = expertdetails.Expertname;
+        res.json({ session});
+      }
+      console.log(session);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  chatmessage: async (req, res) => {
+    try {
+      const id = req.body.sessionId;
+
+      const session = await Session.findOne({ _id: ObjectId(id) });
+      if (session) {
+        console.log(session);
+        res.json({ session });
+      }
+    } catch (error) {}
+  },
+  newmessage: async (req, res) => {
+    try {
+      console.log(req.body);  
+
+    
+      console.log(req.body[1]);
+      const message = req.body[0];
+      const sessionid = req.body[1];
+      console.log(sessionid.sessionId);
+       
+      const session = await Session.findOne({
+        _id: ObjectId(sessionid.sessionId),
+      });
+
+      session.messages.push(message);
+
+      await session.save().then(() => {
+        res.json({ msg: "success" });
+        console.log("success");
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  },
 };
 
 const createactivationToken = (paylod) => {

@@ -21,6 +21,9 @@ router.get('/experts',Adminctrl.getExpert)
 router.post('/acceptExpert',Adminctrl.acceptExpert)
 router.post('/blockExpert',Adminctrl.blockExpert)
 router.post('/deletenews',Adminctrl.deletenews)
+router.post('/deletecar',Adminctrl.deletecar)
+router.post('/deletecomm',Adminctrl.deletecommunity)
+
 
 
 

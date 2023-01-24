@@ -24,6 +24,7 @@ import ApplyExperts from './components/User/Experts/ApplyExperts';
 import Forgot from './components/User/Auth/Forgot';
 import SuccessPage from './pages/User/SuccessPage/SuccessPage';
 import FailedPage from './pages/User/FailedPage/FailedPage';
+import Chatpage from './pages/User/Chatpage/Chatpage';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
       <Route path='/forgott' element={<Forgot/>}></Route>
       <Route path='/payment-succes' element={<SuccessPage/>}></Route>
       <Route path='/payment-failed' element={<FailedPage/>}></Route>
+      <Route path='/chat' element={<Chatpage/>}></Route>
 
 
 

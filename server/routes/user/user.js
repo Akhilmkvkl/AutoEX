@@ -14,6 +14,19 @@ router.get('/experts',Userctrl.getexperts)
 router.get('/vehicles',Userctrl.vehicles)
 router.get('/brands',Userctrl.brands)
 router.post('/payment/stripe',Userctrl.payment)
+router.post('/postreview',Userctrl.postReview)
+router.post('/reviews',Userctrl.review)
+router.get('/communities',Userctrl.community)
+router.post('/paymentsucces',Userctrl.paymentsuccess)
+router.post('/sessions',Userctrl.sessions)
+router.post('/chatmessage',Userctrl.chatmessage)
+router.post('/newmessage',Userctrl.newmessage)
+
+
+
+
+
 
 
 module.exports = router;
+ 

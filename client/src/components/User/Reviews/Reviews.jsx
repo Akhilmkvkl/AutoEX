@@ -1,92 +1,151 @@
-import React from "react";
+import React,{useState} from "react";
 import "./Reviews.css";
+import { Button, Form, Input, Modal, Radio } from 'antd';
+import Rating from '@mui/material/Rating';
+import { axiosUserInstance } from "../../../instance/axios";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-import {
-  Card,
-  CardSubtitle,
-  CardText,
-  CardTitle,
-  CardBody,
-  CardImg,
-} from "reactstrap";
+function Reviews(props) {
+  const userdetails = useSelector((state) => state.admin.userDetails);
+  console.log(props,"this is props")
+  const cardetails=props
+  const [reviews,setreviews]=useState([])
+  const  name = props.Name
+   async function getreview(){
+    try {
+     const res= await axiosUserInstance.post('/reviews',{name})
+     if(res){
+      console.log(res,"this is res")
+      setreviews( res.data.reviews)
+     }
+    } catch (error) {
+       console.log(error);
+    }
+   }
+     
+   useEffect(() => {
+     
+    getreview()
+   
+    
+   }, [])
+   
 
-function Reviews() {
-  const reviews = [
-    {
-      name: "Akhil",
-      review:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      stars: [1, 1, 2, 3],
-      avatar:"https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1000&q=60"
-    },
-    {
-      name: "Aswant",
-      review:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      stars: [1, 1, 2, 3, 1],
-      avatar:"https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1000&q=60"
-    },
-    {
-      name: "Devasankar",
-      review:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      stars: [1, 1, 2],
-      avatar:"https://images.unsplash.com/photo-1628890920690-9e29d0019b9b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGF2YXRhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=1000&q=60"
-    },
-    {
-      name: "Akash",
-      review:
-        "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      stars: [1, 1, 2, 3],
-      avatar:"https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjZ8fGF2YXRhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=1000&q=60"
-    },
-  ];
-
-  return (
-    <div className="Review-componant">
-
-       
-
-
-        {
-            reviews.map((review)=>{
-
-                return(
-               <div className="review">
-                <CardBody>
-                
-                <div className="reviews-top">
-                  <div className="user-details">
-                    <CardImg className="avatar" src={review.avatar} alt="user avatar" />
-        
-                    <CardSubtitle className="mb-2 text-muted" tag="h6">
-                      {review.name}
-                    </CardSubtitle>
-                    {review.stars.map((star) => {
-                      return <CardSubtitle tag="h5">⭐ </CardSubtitle>;
-                    })}
-                   
-                  </div>
-                  <div className="reviews-body">
-                    <CardText>
-                      {
-                        review.review
-                      }
-                    </CardText>
-                  </div>
-                  <CardText>
-                    <small className="text-muted text-bold">{"3 mins ago"}</small>
-                  </CardText>
-                </div>
-              </CardBody>
-              </div>
-
-                )
+  const [value, setValue] = React.useState(1);
+  const [open, setOpen] = useState(false);
+  const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
+    const [form] = Form.useForm();
+    return (
+      <Modal
+        open={open}
+        title="Post Your review"
+        okText="Post"
+        cancelText="Cancel"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              axiosUserInstance.post('/postreview',{values,cardetails,userdetails})
+              
             })
-        }
-      
-    </div>
-  );
+            .catch((info) => {
+              console.log("Validate Failed:", info);
+            });
+        }}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          name="form_in_modal"
+          initialValues={{
+            modifier: "public",
+          }}
+        >
+          <Form.Item
+            name="rating"
+            label=""
+            rules={[
+              {
+                required: true,
+                message: "Please input the title of collection!",
+              },
+            ]}
+          >
+            <Rating
+        name="simple-controlled"
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+      />
+          </Form.Item>
+          <Form.Item name="review" label="" rules={[
+              {
+                required: true,
+                message: "Please write your review",
+              },
+              
+            ]}>
+            <Input style={{width:"20em",height:'10em'}} placeholder="Your review"  type="textarea" />
+          </Form.Item>
+         
+        </Form>
+      </Modal>
+    );
+  };
+  const onCreate = (values) => {
+    console.log("Received values of form: ", values);
+    setOpen(false);
+  }
+    return (
+      <div className="Review-componan">
+        
+        <div className="post" style={{padding:"5vw"}}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Post Review
+          </Button>
+          <CollectionCreateForm
+            open={open}
+            onCreate={onCreate}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+        </div>
+        {reviews.map((review)=>{
+          return(
+            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="mb-6">
+              
+            </div>
+            <div className="flex items-center mb-4">
+              <div className="w-8 h-8 rounded-full overflow-hidden mr-4">
+                <img src="https://via.placeholder.com/80x80" alt="User Avatar" />
+              </div>
+              <div className="flex-1">
+                <div className="mb-2 text-gray-600">{review.postedby}</div>
+                <Rating name="read-only" value={review.rating} readOnly />
+                <div className="text-gray-800">
+                  {review.review}
+                </div>
+              </div>
+            </div>
+          </div>
+          )
+        })}
+        
+      </div>
+    );
+
 }
+
 
 export default Reviews;

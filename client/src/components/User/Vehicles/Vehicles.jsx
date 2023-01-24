@@ -6,12 +6,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import {  CardActionArea, CardActions } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FormControl, InputLabel, Select, MenuItem, TextField } from '@material-ui/core';
-
+import { Input, Button, Select } from 'antd';
 
 function Vehicles() {
   const navigate = useNavigate();
@@ -22,6 +21,7 @@ function Vehicles() {
       const res = await axiosUserInstance.get("/vehicles");
       if (res) {
         setvehicle(res.data.veh);
+        setFilteredVehicles(res.data.veh)
       }
     } catch (error) {}
   }
@@ -45,48 +45,48 @@ function Vehicles() {
   }, []);
 
   function vewVehicle(vehicle) {
-    
     navigate("/VehicleView", { state: vehicle });
   }
-  const [FilteredVehicles,setFilteredVehicles]=useState([])
-  const [brand, setBrand] = useState('');
-  const [type, setType] = useState('');
-  const [search, setSearch] = useState('');
 
-  const handleBrandChange = event => {
-    setBrand(event.target.value);
-  };
-
-  const handleTypeChange = event => {
-    setType(event.target.value);
-  };
-
-  const handleSearchChange = event => {
-    setSearch(event.target.value);
-  };
  
-  const handleApplyFilter = () => {
-    let filteredVehicles = [...Vehicle];
+    const [filters, setFilters] = useState({ brand: "", type: "", search: "" });
+    const [filteredVehicles, setFilteredVehicles] = useState(Vehicle);
 
-    if (brand) {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.Brand === brand);
-    }
+    const handleBrandFilter = (value) => {
+      setFilters({ ...filters, brand: value });
+    };
 
-    if (type) {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.Type === type);
-    }
+    const handleTypeFilter = (value) => {
+      setFilters({ ...filters, type: value });
+    };
 
-    if (search) {
-      filteredVehicles = filteredVehicles.filter(vehicle => 
-        vehicle.Name.toLowerCase().includes(search.toLowerCase())
-      );
+    const handleSearch = (value) => {
+      setFilters({ ...filters, search: value });
+    };
 
-      setFilteredVehicles(filteredVehicles);
+    const handleApplyFilters = () => {
+      let filtered = Vehicle;
+      if (filters.brand) {
+        filtered = filtered.filter(
+          (vehicle) => vehicle.Brand === filters.brand
+        );
+      }
+      if (filters.type) {
+        filtered = filtered.filter((vehicle) => vehicle.Type === filters.type);
+      }
+      if (filters.search) {
+        filtered = filtered.filter((vehicle) =>
+          vehicle.Name.toLowerCase().includes(filters.search.toLowerCase())
+        );
+      }
+      setFilteredVehicles(filtered);
+    };
 
-    }
-  }
-  
-  
+    const handleResetFilters = () => {
+      setFilters({ brand: "", type: "", search: "" });
+      setFilteredVehicles(Vehicle);
+    };
+ 
 
   return (
     <div>
@@ -102,7 +102,7 @@ function Vehicles() {
         >
           <img
             className="ImgNews"
-            src="https://cdn.wallpapersafari.com/72/96/8nrGd4.jpg"
+            src="https://wallpapercave.com/wp/wp11019599.jpg"
             alt=""
           />
         </MovingComponent>
@@ -121,53 +121,52 @@ function Vehicles() {
           </h1>
         </MovingComponent>
       </div>
-      <div className="ml-8">
-      <FormControl>
-        <InputLabel id="brand-label">Brand</InputLabel>
-        <Select
-          labelId="brand-label"
-          id="brand-select"
-          value={brand}
-          onChange={handleBrandChange}
-          
-        >
-          <MenuItem value="">
-            <em>All</em>
-          </MenuItem>
-          <MenuItem value="brand1">Brand 1</MenuItem>
-          <MenuItem value="brand2">Brand 2</MenuItem>
-          <MenuItem value="brand3">Brand 3</MenuItem>
-        </Select>
-      </FormControl>
 
-      <FormControl>
-        <InputLabel id="type-label">Type</InputLabel>
-        <Select
-          labelId="type-label"
-          id="type-select"
-          value={type}
-          onChange={handleTypeChange}
-        >
-          <MenuItem value="">
-            <em>All</em>
-          </MenuItem>
-          <MenuItem value="type1">Type 1</MenuItem>
-          <MenuItem value="type2">Type 2</MenuItem>
-          <MenuItem value="type3">Type 3</MenuItem>
-        </Select>
-      </FormControl>
+      <div className="flex flex-col">
+        <div className="flex flex-row items-center mb-2">
+          <Select
+            className="mr-2"
+            placeholder="Brand"
+            value={filters.brand}
+            onChange={handleBrandFilter}
+            style={{width:"15em"}}
+          >
+            <Option value="">All</Option>
+            {vehicleBrand.map((brand)=>{
+              return  <Option value={brand.Brandname}>{brand.Brandname}</Option>
+            })}
+           
+            
+          </Select>
+          <Select
+            className="mr-2"
+            placeholder="Type"
+            value={filters.type}
+            onChange={handleTypeFilter}
+            style={{width:300}}
+          >
+            <Option value="">All</Option>
+            <Option value="Sedan">Sedan</Option>
+            <Option value="SUV">SUV</Option>
+            <Option value="Pickup">Hatchback</Option>
+            <Option value="Electric">Micro Suv</Option>
+          </Select>
+          <Input
+            className="mr-2"
+            placeholder="Search by car  name"
+            value={filters.search}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <Button  className="mr-2 bg-red-600" onClick={handleApplyFilters}>
+            Apply
+          </Button>
+          <Button onClick={handleResetFilters}>Reset</Button>
+        </div>
+        
+      </div>
 
-      <TextField
-        id="search"
-        label="Search"
-        value={search}
-        onChange={handleSearchChange}
-      />
-      <button onClick={handleApplyFilter}>Apply Filter</button>
-    </div>
-      
       <div className=" flex flex-wrap grid-cols-3 gap-3 ">
-        {FilteredVehicles.map((vehicles) => {
+        {filteredVehicles.map((vehicles) => {
           return (
             <div
               className="veh-card"
@@ -187,15 +186,13 @@ function Vehicles() {
                     <Typography gutterBottom variant="h5" component="div">
                       {vehicles.Name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" className="text-red-600">
                       {vehicles.price}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    Share
-                  </Button>
+                 
                 </CardActions>
               </Card>
             </div>
