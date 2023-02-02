@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Space } from "antd";
 import { useDispatch } from "react-redux";
-import { clearUserLoginDetails } from "../../../Redux/adminReducer";
+import { clearUserLoginDetails,clearUserToken } from "../../../Redux/adminReducer";
 import {  Modal } from 'antd';
 
 function Header() {
@@ -19,6 +19,7 @@ function Header() {
 
   const handleOk = () => {
     Dispatch(clearUserLoginDetails());
+    Dispatch(clearUserToken())
     setIsModalOpen(false);
   };
 

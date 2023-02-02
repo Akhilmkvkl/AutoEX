@@ -12,10 +12,11 @@ const Community = require("../modals/Community_modal");
 const Session = require("../modals/Session_modal");
 const { ObjectId } = require("mongodb");
 const { CLIENT_URL } = process.env;
-const express = require('express');
+const express = require("express");
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const server = require("http").Server(app);
+
+const moment = require('moment');
 
 const Userctrl = {
   register: async (req, res) => {
@@ -130,7 +131,7 @@ const Userctrl = {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
-      res.json({ msg: "Login Success", user });
+      res.json({ msg: "Login Success", user,refresh_token });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
@@ -244,26 +245,49 @@ const Userctrl = {
       const expert = req.body.expert;
       console.log(expert._id);
       const expertId = expert.ExpertId;
-      const user = req.body.userdetails;
-      const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            price_data: {
-              currency: "inr",
-              product_data: {
-                name: "AutoEx ",
-              },
-              unit_amount: expert.Rate * 100,
-            },
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: `${process.env.CLIENT_URL}/payment-succes?session_id={CHECKOUT_SESSION_ID}&expertid=${expertId}`,
-        cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
-      });
+      const currentDate = moment().format('YYYY-MM-DD');
+     console.log(currentDate);
+     Session.find({
+      $expr: {
+          $eq: [
+              { $dateToString: { format: "%Y-%m-%d", date: "$bookedTime" } },
+              currentDate
+          ]
+      }
+  })
+  .then(sessions => {
+      console.log(sessions);
+  });
+     
 
-      res.send({ url: session.url });
+
+
+
+
+
+
+      
+      // const user = req.body.userdetails;
+      // const sessiondate=req.body.values.BookedDate
+      // const session = await stripe.checkout.sessions.create({
+      //   line_items: [
+      //     {
+      //       price_data: {
+      //         currency: "inr",
+      //         product_data: {
+      //           name: "AutoEx ",
+      //         },
+      //         unit_amount: expert.Rate * 100,
+      //       },
+      //       quantity: 1,
+      //     },
+      //   ],
+      //   mode: "payment",
+      //   success_url: `${process.env.CLIENT_URL}/payment-succes?session_id={CHECKOUT_SESSION_ID}&expertid=${expertId}&date=${sessiondate}`,
+      //   cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
+      // });
+
+      // res.send({ url: session.url });
     } catch (error) {
       console.log(error);
     }
@@ -274,17 +298,18 @@ const Userctrl = {
       const userdetails = req.body.userdetails;
 
       console.log(redirectUrl);
-      const datenow = new Date();
-      const sessionDate = datenow.toDateString();
+      
 
       const url = new URL(redirectUrl);
       const sessionId = url.searchParams.get("session_id");
       const expertId = url.searchParams.get("expertid");
+      const sessiondate = url.searchParams.get("date");
+
       const userId = userdetails._id;
       // console.log(sessionId);
       console.log(expertId);
-      const expert = await Expert.findOne({ExpertId:ObjectId(expertId)})
-      console.log(expert,"this is expert")
+      const expert = await Expert.findOne({ ExpertId: ObjectId(expertId) });
+      console.log(expert, "this is expert");
       const session = await stripe.checkout.sessions.retrieve(sessionId);
       console.log(session.status); // "succeeded" or "canceled"
       if (session.status === "complete") {
@@ -292,14 +317,14 @@ const Userctrl = {
         // Payment was successful, you can update the user's payment status in your database
 
         const sessiodetails = new Session({
-          bookedTime: sessionDate,
+          bookedTime: sessiondate,
           payment: "Done",
-          user:userdetails.name,
+          user: userdetails.name,
           expertName: expert.Expertname,
           members: [userId, expertId],
         });
 
-        sessiodetails.save().then(() => { 
+        sessiodetails.save().then(() => {
           res.json({ msg: "success fully created a session" });
         });
       } else {
@@ -346,20 +371,13 @@ const Userctrl = {
   sessions: async (req, res) => {
     try {
       const id = req.body.userid;
-     
+
       console.log(id);
-      const session = await Session.find({ members: id  });
+      const session = await Session.find({ members: id });
       if (session) {
-        console.log(session)
-        // const expert = session.members[1];
-        // const expertdetails = await Expert.findOne({
-        //   ExpertId: ObjectId(expert),
-        // });
-        // if (expertdetails) console.log(expertdetails.Expertname);
-        // const expertname = expertdetails.Expertname;
-        res.json({ session});
+        console.log(session);
       }
-      console.log(session);
+      res.json({session})
     } catch (error) {
       console.log(error);
     }
@@ -377,14 +395,13 @@ const Userctrl = {
   },
   newmessage: async (req, res) => {
     try {
-      console.log(req.body);  
+      console.log(req.body);
 
-    
       console.log(req.body[1]);
       const message = req.body[0];
       const sessionid = req.body[1];
       console.log(sessionid.sessionId);
-       
+
       const session = await Session.findOne({
         _id: ObjectId(sessionid.sessionId),
       });
@@ -396,7 +413,64 @@ const Userctrl = {
         console.log("success");
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    }
+  },
+  addAvailability: async (req, res) => {
+    try {
+      console.log(req.body);
+      const expertid = req.body.expertid;
+      const dates = req.body.date;
+      req.body.value;
+      const response = await Expert.findOneAndUpdate(
+        { ExpertId: expertid },
+        {
+          $push: {
+            availableDays: dates,
+          },
+        }
+      );
+      res.status(200).json({ response });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  removeAvilable: async (req, res) => {
+    try {
+      const expertid = req.body.expertid;
+      const index = req.body.index;
+
+      const response = await Expert.updateOne({ ExpertId: expertid }, [
+        {
+          $set: {
+            availableDays: {
+              $concatArrays: [
+                { $slice: ["$availableDays", index] },
+                {
+                  $slice: [
+                    "$availableDays",
+                    { $add: [1, index] },
+                    { $size: "$availableDays" },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ]);
+      res.status(200).json({ response });
+    } catch (error) {}
+  },
+  getdates: async (req, res) => {
+    try {
+      const expertid = req.body.expertid
+      console.log(expertid)
+      const expert = await Expert.findOne({ ExpertId: expertid });
+      console.log(expert)
+      const dates = expert.availableDays;
+      res.json({ dates });
+    } catch (error) {
+      console.log(error);
     }
   },
 };

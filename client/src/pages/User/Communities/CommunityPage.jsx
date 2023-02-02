@@ -5,6 +5,7 @@ import Communities from "../../../components/User/Communities/Communities";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+
 function CommunityPage() {
   const navigate = useNavigate();
 

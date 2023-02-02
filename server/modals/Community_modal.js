@@ -19,6 +19,10 @@ const communityschema=new schema({
     decription:{
         required:true,
         type:String
+    },
+    blocked:{
+        type:Boolean,
+        
     }
 })
 

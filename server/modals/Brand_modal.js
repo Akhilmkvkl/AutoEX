@@ -10,6 +10,10 @@ const BrandScema= new schema({
     icon:{
         required:true,
         type:String
+    },
+    blocked:{
+        required:true,
+        type:Boolean
     }
 })
   

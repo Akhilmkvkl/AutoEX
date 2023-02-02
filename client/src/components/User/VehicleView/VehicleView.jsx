@@ -35,7 +35,7 @@ function VehicleView() {
         <Container>
           <Row>
             <Col lg="6">
-              <img src={vehicles.Images[1]} alt="" className="w-100" />
+              <img src={vehicles.Images[0]} alt="" className="w-100" />
               {/* {vehicles.image.forEach((images) => {
                 <MDBCarousel showIndicators showControls fade>
                   <MDBCarouselItem

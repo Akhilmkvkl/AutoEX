@@ -16,6 +16,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Select as MatSelect } from '@material-ui/core';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from "@material-ui/core/IconButton";
+import CheckIcon from "@material-ui/icons/Check";
+import BlockIcon from "@material-ui/icons/Block";
 
 const useStyles = makeStyles({
   table: {
@@ -171,6 +174,56 @@ function AdminCommunity() {
     return nameMatch && typeMatch;
   });
 
+
+
+
+  async function block(id){
+    try {
+      const res= await axiosAdminInstance.post('/blockcommunity',{id})
+      console.log(res);
+    } catch (error) {
+     
+    }
+}
+async function unblock(id){
+ try {
+   const res= await axiosAdminInstance.post('/unblockcommunity',{id})
+   console.log(res);
+ } catch (error) {
+  
+ }
+}
+
+
+  const [visible, setVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedAction, setSelectedAction] = useState('');
+
+  const handleBlock = (community) => {
+    setSelectedUser(community);
+    setSelectedAction('block');
+    setVisible(true);
+  }
+
+  const handleUnblock = (user) => {
+    setSelectedUser(user);
+    setSelectedAction('unblock');
+    setVisible(true);
+  }
+
+  const handleOk = async () => {
+    setVisible(false);
+    if (selectedAction === 'block') {
+      await block(selectedUser._id);
+    } else {
+      await unblock(selectedUser._id);
+    }
+  }
+
+  const handleCancel = () => {
+    setVisible(false);
+  }
+
   return (
     <div className="mt-32 ml-10">
       <div>
@@ -219,6 +272,14 @@ function AdminCommunity() {
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
+              <Modal
+        title={`Are you sure you want to ${selectedAction}  ${selectedUser.name} ?`}
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        
+      </Modal>
               <TableBody>
                 {filteredCommunities.map((community) => (
                   // console.log(car.Images, "this is car"),
@@ -229,10 +290,28 @@ function AdminCommunity() {
                     <TableCell>{community.platform}</TableCell>
                    
                     <TableCell>
-                      <div onClick={()=>{deletecommunity(community._id)}}>
-                      <DeleteIcon />
+                    <IconButton
+                      color={community.blocked === true ? "secondary" : "primary"}
+                      onClick={() => {
+                        // Implement block/unblock logic here
+                      }}
+                    >
+                      {community.blocked === true ? (
+                        <BlockIcon
+                          onClick={() => {
+                            handleUnblock(community)
+                          }}
+                        />
+                      ) : (
+                        <CheckIcon
+                          onClick={() => {
+                            handleBlock(community);
+                          }}
+                        />
+                      )}
+                    </IconButton>
 
-                      </div>
+                      
                     </TableCell>
                   </TableRow>
                 ))}

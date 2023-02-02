@@ -17,7 +17,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import Navebar from "../../../components/Admin/Navebar/Navebar";
 import { axiosAdminInstance } from "../../../instance/axios";
 import { showSuccessMsg } from "../../Utils/Notifications/Notification";
-
+import axios from "axios";
 function AddVehicle() {
   const [brands, setbrands] = useState([]);
   const vehicletype = [
@@ -57,16 +57,34 @@ function AddVehicle() {
   const [success, setsuccess] = useState(false);
 
   const handleChange = ({ fileList }) => setImages(fileList);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const onFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
   async function submit() {
     const values = form.getFieldsValue();
     console.log(values);
-    // const formData = new FormData();
-    // formData.append("title", values.title);
-    // formData.append("news", values.news);
-    // images.forEach((image) => formData.append("image", image.originFileObj));
+ 
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("upload_preset", "cbepzz3d");
 
-    const res = await axiosAdminInstance.post("/addvehicle", { values });
+    console.log(formData);
+
+    const up = await axios.post(
+      "https://api.cloudinary.com/v1_1/doelennei/image/upload/",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+
+    console.log(up);
+    const imagedata = up.data.url;
+
+    const res = await axiosAdminInstance.post("/addvehicle", { values,imagedata });
     console.log(res);
     if (res) {
       form.resetFields();
@@ -150,29 +168,12 @@ function AddVehicle() {
             </Form.Item>
 
             <Form.Item name="image" label="">
-              <Upload
-                name="images"
-                valuePropName="fileList"
-                onChange={handleChange}
-                multiple
-                listType="picture-card"
-                accept="jpg"
-              >
-                <div>
-                  <PlusOutlined />
-                  <div
-                    style={{
-                      marginTop: 8,
-                    }}
-                  >
-                    Upload
-                  </div>
-                </div>
-              </Upload>
+            <input type="file" onChange={onFileChange} />
+            <button></button>
             </Form.Item>
             <Form.Item label="">
               <Button htmlType="submit" className="bg-red-600">
-                Add News
+                Add Vehicle
               </Button>
             </Form.Item>
           </Form>

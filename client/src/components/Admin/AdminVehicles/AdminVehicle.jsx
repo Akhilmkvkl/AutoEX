@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, Modal, Radio, Upload } from "antd";
+import { Button, Form, Input, Modal, Radio, Upload, Drawer } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { axiosAdminInstance } from "../../../instance/axios";
 import { Link } from "react-router-dom";
@@ -14,6 +14,9 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
+import CheckIcon from "@material-ui/icons/Check";
+import BlockIcon from "@material-ui/icons/Block";
 
 const useStyles = makeStyles({
   table: {
@@ -91,27 +94,36 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
 
 function AdminVehicle() {
   const [cars, setcar] = useState([]);
+  const [brands, setbrands] = useState([]);
+
+  async function getbrand() {
+    try {
+      const brandsdata = await axiosAdminInstance.get("/brands");
+      if (brandsdata) {
+        setbrands(brandsdata.data.brands);
+      }
+    } catch (error) {}
+  }
 
   useEffect(() => {
     async function getvehicle() {
       try {
         const auto = await axiosAdminInstance.get("/vehicle");
-        console.log(auto);
+
         setcar(auto.data.veh);
       } catch (error) {
         console.log(error);
       }
     }
     getvehicle();
+    getbrand();
   }, [deletecar]);
 
-  async  function deletecar(id){
-     try {
-       console.log(id)
-       axiosAdminInstance.post('/deletecar',{id})
-     } catch (error) {
-      
-     }
+  async function deletecar(id) {
+    try {
+      console.log(id);
+      axiosAdminInstance.post("/deletecar", { id });
+    } catch (error) {}
   }
 
   const classes = useStyles();
@@ -145,6 +157,56 @@ function AdminVehicle() {
     setOpen(false);
   };
 
+  const [opend, setOpend] = useState(false);
+  const showDrawer = () => {
+    setOpend(true);
+  };
+  const onClose = () => {
+    setOpend(false);
+  };
+
+  async function block(id) {
+    try {
+      const res = await axiosAdminInstance.post("/blockbrand", { id });
+      console.log(res);
+    } catch (error) {}
+  }
+  async function unblock(id) {
+    try {
+      const res = await axiosAdminInstance.post("/unblockbrand", { id });
+      console.log(res);
+    } catch (error) {}
+  }
+
+  const [visible, setVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedAction, setSelectedAction] = useState("");
+
+  const handleBlock = (brand) => {
+    setSelectedUser(brand);
+    setSelectedAction("block");
+    setVisible(true);
+  };
+
+  const handleUnblock = (user) => {
+    setSelectedUser(user);
+    setSelectedAction("unblock");
+    setVisible(true);
+  };
+
+  const handleOk = async () => {
+    setVisible(false);
+    if (selectedAction === "block") {
+      await block(selectedUser._id);
+    } else {
+      await unblock(selectedUser._id);
+    }
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
   return (
     <div className="mt-32 ml-10">
       <div>
@@ -157,6 +219,69 @@ function AdminVehicle() {
         >
           Add Brand
         </Button>
+        <Button type="primary" onClick={showDrawer}>
+          View brands
+        </Button>
+        <Drawer title="Brands" placement="right" onClose={onClose} open={opend}>
+          <TableContainer component={Paper} className="container mx-auto px-4">
+            <Table className={""} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell className="px-4 py-2">Name</TableCell>
+                  <TableCell align="right" className="px-4 py-2">
+                    Status
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <Modal
+                  title={`Are you sure you want to ${selectedAction}  ${selectedUser.Brandname} brand?`}
+                  open={visible}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                ></Modal>
+                {brands.map((brand) => {
+                  return (
+                    <TableRow className="text-gray-700">
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="px-4 py-2"
+                      >
+                        {brand.Brandname}
+                      </TableCell>
+
+                      <TableCell align="right" className="px-4 py-2">
+                        <IconButton
+                          color={
+                            brand.blocked === true ? "secondary" : "primary"
+                          }
+                          onClick={() => {
+                            // Implement block/unblock logic here
+                          }}
+                        >
+                          {brand.blocked === true ? (
+                            <BlockIcon
+                              onClick={() => {
+                                handleUnblock(brand);
+                              }}
+                            />
+                          ) : (
+                            <CheckIcon
+                              onClick={() => {
+                                handleBlock(brand);
+                              }}
+                            />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Drawer>
         <CollectionCreateForm
           open={open}
           onCreate={onCreate}
@@ -223,7 +348,14 @@ function AdminVehicle() {
                         </TableCell>
                         <TableCell>
                           <EditIcon />
-                        <div onClick={()=>{deletecar(car._id)}}>  <DeleteIcon  /></div>
+                          <div
+                            onClick={() => {
+                              deletecar(car._id);
+                            }}
+                          >
+                            {" "}
+                            <DeleteIcon />
+                          </div>
                         </TableCell>
                       </TableRow>
                     )

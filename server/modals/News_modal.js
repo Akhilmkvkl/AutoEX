@@ -16,6 +16,9 @@ const newsschema = new schema({
     ],
     date:{
         type:String
+    },
+    list:{
+        type:Boolean
     }
 
   

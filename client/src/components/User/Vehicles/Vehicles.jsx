@@ -179,7 +179,7 @@ function Vehicles() {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={vehicles.Images[1]}
+                    image={vehicles.Images[0]}
                     alt="green iguana"
                   />
                   <CardContent>

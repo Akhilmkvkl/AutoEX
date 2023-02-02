@@ -5,9 +5,21 @@ import { Link, useNavigate } from "react-router-dom";
 import './Admin_login.css'
 import axios from 'axios'
 import {showErrorMsg,showSuccessMsg}  from '../../Utils/Notifications/Notification'
+import {useDispatch} from'react-redux';
+import {adminLoginDetails} from '../../../Redux/adminReducer'
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function Admin_login() {
+  const navigate = useNavigate();
+
+  const admindetails = useSelector((state) => state.admin.adminDetails);
+
+  useEffect(() => {
+    if (!admindetails == false) navigate("/Admin-home");
+  }, [admindetails]);
    const navigaete=useNavigate()
+   const Dispatch=useDispatch()
     const initialState = {
         email: "",
         password: "",
@@ -38,6 +50,7 @@ function Admin_login() {
            if(res){
             setUser({ ...User, err: "", success: res.data.msg });
             navigaete('/Admin-home')
+            Dispatch(adminLoginDetails(res.data.admin))
            }
          
          

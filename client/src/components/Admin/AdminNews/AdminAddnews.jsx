@@ -12,50 +12,73 @@ import {
   TreeSelect,
   Switch,
   Checkbox,
-  Upload,
+  // Upload,
 } from "antd";
 import { message } from "antd";
 import { axiosAdminInstance, axiosUserInstance } from "../../../instance/axios";
 import { showSuccessMsg } from "../../Utils/Notifications/Notification";
-
+import axios from "axios";
 
 function AdminAddnews() {
- 
   const { TextArea } = Input;
 
   const [form] = Form.useForm();
   const [images, setImages] = useState([]);
-  const [success,setsuccess]=useState(false)
+  const [success, setsuccess] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const onFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
   const handleChange = ({ fileList }) => setImages(fileList);
+  console.log(images);
 
-     
   async function submit() {
-  // console.log(images)
-    const values = form.getFieldsValue();
-    console.log(values);
-    const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("news", values.news);
-    images.forEach((image) => formData.append("image", image.originFileObj));
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("upload_preset", "cbepzz3d");
 
-    const res = await axiosAdminInstance.post("/addnews", { values });
-    console.log(res);
-    if (res) {
-      form.resetFields();
-      setsuccess(true)
-      setTimeout(() => {
-        setsuccess(false)
-      }, 5000);
+      console.log(formData);
+
+      const up = await await axios.post(
+        "https://api.cloudinary.com/v1_1/doelennei/image/upload/",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      console.log(up);
+      const imagedata = up.data.url;
+
+      const values = form.getFieldsValue();
+      console.log(values);
+      const res = await axiosAdminInstance.post("/addnews", {
+        values,
+        imagedata,
+      });
+      console.log(res);
+      if (res) {
+        form.resetFields();
+        setsuccess(true);
+        setTimeout(() => {
+          setsuccess(false);
+        }, 5000);
+      }
+    } catch (error) {
+      console.log(error.error);
     }
   }
 
   return (
     <div className="mt-48 ">
       <>
-      <div className="w-48">
-      {success==true && showSuccessMsg("successfully updated the news")}
-      </div>
+        <div className="w-48">
+          {success == true && showSuccessMsg("successfully updated the news")}
+        </div>
         <Form
           form={form}
           onFinish={submit}
@@ -76,25 +99,8 @@ function AdminAddnews() {
           </Form.Item>
 
           <Form.Item name="image" label="">
-            <Upload
-            onChange={handleChange}
-              name="images"
-              valuePropName=""
-              multiple
-              listType="picture-card"
-             
-            > 
-              <div>
-                <PlusOutlined />
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload
-                </div>
-              </div> 
-            </Upload>
+            <input type="file" onChange={onFileChange} />
+            <button></button>
           </Form.Item>
           <Form.Item label="">
             <Button htmlType="submit" className="bg-red-600">

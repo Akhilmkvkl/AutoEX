@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import MovingComponent from "react-moving-text";
 import axios from "axios";
 import {useDispatch} from'react-redux';
-import {userLoginDetails} from '../../../Redux/adminReducer'
+import {userLoginDetails,userToken} from '../../../Redux/adminReducer'
 import {
   showErrorMsg,
   showSuccessMsg,
@@ -73,8 +73,10 @@ function Auth() {
       setUser({ ...User, err: "", success: res.data.msg });
       localStorage.setItem("firstlogin", true,"user",);
       const user=res.data.user
+      const token =res.data.refresh_token
       console.log(user)
       Dispatch(userLoginDetails(user))
+      Dispatch(userToken(token))
       navigate("/");
     } catch (error) {
       error.response.data.msg &&

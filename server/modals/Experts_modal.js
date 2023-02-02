@@ -20,6 +20,14 @@ const expertsschema=new schema({
         type:String,
         required:true
     },
+    availableDays:[],
+     fromTime:{
+        type:String
+     },
+     toTime:{
+        type:String
+     },
+
     about:{
         type:String,
         required:true
