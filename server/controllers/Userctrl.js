@@ -200,7 +200,7 @@ const Userctrl = {
   },
   news: async (req, res) => {
     try {
-      const news = await News.find();
+      const news = await News.find({list:true});
       if (news) {
         res.json({ msg: "success", news });
       }
@@ -242,52 +242,38 @@ const Userctrl = {
   payment: async (req, res) => {
     try {
       console.log(req.body);
-      const expert = req.body.expert;
+      const expert = req.body[0];
       console.log(expert._id);
       const expertId = expert.ExpertId;
-      const currentDate = moment().format('YYYY-MM-DD');
-     console.log(currentDate);
-     Session.find({
-      $expr: {
-          $eq: [
-              { $dateToString: { format: "%Y-%m-%d", date: "$bookedTime" } },
-              currentDate
-          ]
-      }
-  })
-  .then(sessions => {
-      console.log(sessions);
-  });
-     
+ 
 
-
-
-
-
+       
 
 
       
-      // const user = req.body.userdetails;
-      // const sessiondate=req.body.values.BookedDate
-      // const session = await stripe.checkout.sessions.create({
-      //   line_items: [
-      //     {
-      //       price_data: {
-      //         currency: "inr",
-      //         product_data: {
-      //           name: "AutoEx ",
-      //         },
-      //         unit_amount: expert.Rate * 100,
-      //       },
-      //       quantity: 1,
-      //     },
-      //   ],
-      //   mode: "payment",
-      //   success_url: `${process.env.CLIENT_URL}/payment-succes?session_id={CHECKOUT_SESSION_ID}&expertid=${expertId}&date=${sessiondate}`,
-      //   cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
-      // });
+      const user = req.body[1];
+      const sessiondates=req.body[2]
+      console.log(sessiondates);
+      sessiondate=sessiondates.BookedDate
+      const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: "AutoEx ",
+              },
+              unit_amount: expert.Rate * 100,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        success_url: `${process.env.CLIENT_URL}/payment-succes?session_id={CHECKOUT_SESSION_ID}&expertid=${expertId}&date=${sessiondate}`,
+        cancel_url: `${process.env.CLIENT_URL}/payment-failed`,
+      });
 
-      // res.send({ url: session.url });
+      res.send({ url: session.url });
     } catch (error) {
       console.log(error);
     }
@@ -364,7 +350,7 @@ const Userctrl = {
   },
   community: async (req, res) => {
     try {
-      const community = await Community.find();
+      const community = await Community.find({blocked:false});
       res.json({ community });
     } catch (error) {}
   },
@@ -489,7 +475,7 @@ const createaccessToken = (paylod) => {
 
 const createrefreshToken = (paylod) => {
   return jwt.sign(paylod, process.env.Refresh_token_secret, {
-    expiresIn: "7d",
+    expiresIn: "70d",   
   });
 };
 

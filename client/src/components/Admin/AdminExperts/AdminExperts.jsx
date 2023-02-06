@@ -110,6 +110,7 @@ function AdminExperts() {
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
+            <div style={{display:"flex", flexWrap: "wrap"}}>
             {autoexExpert.map((autoexExperts) => {
               return (
                 <div>
@@ -134,8 +135,10 @@ function AdminExperts() {
                 </div>
               );
             })}
+            </div>
           </TabPanel>
           <TabPanel value={value} index={1}>
+          <div style={{display:"flex", flexWrap: "wrap"}}>
             {newExperts.map((newexpert) => {
               return (
                 <div>
@@ -167,8 +170,10 @@ function AdminExperts() {
                 </div>
               );
             })}
+            </div>
           </TabPanel>
           <TabPanel value={value} index={2}>
+          <div style={{display:"flex", flexWrap: "wrap"}}>
             {blockedExpert.map((blockedExperts) => {
               return (
                 <div>
@@ -195,6 +200,7 @@ function AdminExperts() {
                 </div>
               );
             })}
+            </div>
           </TabPanel>
         </Box>
       </div>

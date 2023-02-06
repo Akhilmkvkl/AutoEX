@@ -3,7 +3,6 @@
 import Homepage from './pages/User/Home/Homepage';
  import { Route,Routes } from 'react-router-dom';
 import Authpage from './pages/User/AuthPage/Authpage.jsx';
-// import ActivateEmail  from './components/User/Auth/ActivateEmail.jsx'
 import Mailactivation from './pages/User/Mailactivation/Mailactivation';
 import Admin_Login from '../src/components/Admin/Admin_login/Admin_login.jsx';
 import NewsPage from './pages/User/News/NewsPage';
@@ -26,6 +25,7 @@ import SuccessPage from './pages/User/SuccessPage/SuccessPage';
 import FailedPage from './pages/User/FailedPage/FailedPage';
 import Chatpage from './pages/User/Chatpage/Chatpage';
 import ExpertSessionPage from './pages/User/Experts/ExpertSessionPage';
+import Error from './components/error/Error';
 
 function App() {
   return (
@@ -56,6 +56,9 @@ function App() {
       <Route path='/payment-failed' element={<FailedPage/>}></Route>
       <Route path='/chat' element={<Chatpage/>}></Route>
       <Route path='/Expertsession' element={<ExpertSessionPage/>}></Route>
+      <Route path={'*'} element={<Error/>}></Route>
+
+
 
 
 

@@ -39,7 +39,7 @@ function Home() {
           >
             <img
               className="ImgHome"
-              src="https://cdn.wallpapersafari.com/49/42/ZyMNbO.jpg"
+              src="https://images.pexels.com/photos/3422964/pexels-photo-3422964.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
               alt=""
             />
           </MovingComponent>
@@ -69,7 +69,7 @@ function Home() {
           iteration="1"
           fillMode="none"
         >
-          {/* <h2><span>Brands</span></h2> */}
+          
 
           <div className="brand-list">
             {brands.map((brand) => {
@@ -87,7 +87,7 @@ function Home() {
         <br />
         <br />
         <br />
-        {/* <h2><span>News</span></h2> */}
+        
       </div>
       <div className="section3"></div>
     </div>

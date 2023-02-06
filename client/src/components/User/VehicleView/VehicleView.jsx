@@ -20,8 +20,8 @@ function VehicleView() {
   console.log(vehicles.image)
 
   const opts = {
-    height: "490",
-    width: "840",
+    height: "500",
+    width: "90%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
@@ -36,16 +36,7 @@ function VehicleView() {
           <Row>
             <Col lg="6">
               <img src={vehicles.Images[0]} alt="" className="w-100" />
-              {/* {vehicles.image.forEach((images) => {
-                <MDBCarousel showIndicators showControls fade>
-                  <MDBCarouselItem
-                    className="w-100 d-block"
-                    itemId={1}
-                    src={images}
-                    alt="..."
-                  ></MDBCarouselItem>
-                </MDBCarousel>
-              })} */}
+              
             </Col>
             <Col>
               <div className="">
@@ -120,12 +111,9 @@ function VehicleView() {
                   </span>
 
                   <span className=" d-flex align-items-center gap-1 section__description fw-bold">
-                    <i
-                      className="ri-building-2-line"
-                      style={{ color: "#f9a826" }}
-                    >
+                    
                      {vehicles.Description}
-                    </i>{" "}
+                    
                   </span>
                 </div>
               </div>
@@ -172,7 +160,7 @@ function VehicleView() {
         </div>
       </div>
 
-      <div className="video">
+      <div>
         <YouTube
           videoId={vehicles.Video}
           opts={opts}
@@ -180,6 +168,7 @@ function VehicleView() {
         />
       </div>
       <Reviews {...vehicles}/>
+  
     </div>
   );
 }

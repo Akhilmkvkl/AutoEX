@@ -76,9 +76,9 @@ function News() {
                       viewNewses(news);
                     }}
                   >
-                    {/* <Link to={'/ViewNews'} className="blog__title"> */}
+                    
                     {news.title}
-                    {/* </Link> */}
+                  
                     <p className="section__description mt-3">
                       {news.news.length > 100
                         ? news.news.substr(0, 100)

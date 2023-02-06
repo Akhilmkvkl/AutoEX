@@ -7,6 +7,7 @@ import MovingComponent from "react-moving-text";
 import axios from "axios";
 import {useDispatch} from'react-redux';
 import {userLoginDetails,userToken} from '../../../Redux/adminReducer'
+import { ToastContainer, toast } from "react-toastify";
 import {
   showErrorMsg,
   showSuccessMsg,
@@ -77,7 +78,18 @@ function Auth() {
       console.log(user)
       Dispatch(userLoginDetails(user))
       Dispatch(userToken(token))
+     
       navigate("/");
+      toast.success("Login Success.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } catch (error) {
       error.response.data.msg &&
         setUser({ ...User, err: error.response.data.msg, success: "" });
@@ -136,6 +148,7 @@ function Auth() {
   };
 
   return (
+    
     <MovingComponent
       type="fadeIn"
       duration="900ms"
@@ -146,6 +159,7 @@ function Auth() {
       fillMode="none"
     >
       <div className="authdiv">
+      <ToastContainer />
         {isSignup ? (
           <form onSubmit={handleRegister}>
             <Box className="box">

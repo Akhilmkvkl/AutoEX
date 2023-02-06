@@ -16,8 +16,8 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
-    height: "100%",
+    width: "90%",
+    height: "90%",
   },
   chatHeader: {
     display: "flex",
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     color: "red",
   },
   chatMessages: {
-    width: "100%",
+    width: "20%",
     height: "80%",
     overflowY: "auto",
     padding: "1rem",
@@ -47,21 +47,22 @@ const useStyles = makeStyles({
   incomingMessage: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "flex-start",
     padding: "1rem",
     backgroundColor: "#f5f5f5",
     borderRadius: "1rem",
     "& p": {
-      marginLeft: "1rem",
+      marginLeft: "3rem",
     },
   },
   outgoingMessage: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "flex-end",
     padding: "1rem",
     backgroundColor: "#007bff",
     color: "#fff",
     borderRadius: "1rem",
-    marginLeft: "auto",
     "& p": {
       marginLeft: "1rem",
     },
@@ -82,7 +83,7 @@ const useStyles = makeStyles({
     backgroundColor: "#007bff",
     color: "white",
     border: "none",
-    padding: "0.5rem 1rem",
+   
     borderRadius: "1rem",
     "&:hover": {
       backgroundColor: "#0069d9",
@@ -92,7 +93,7 @@ const useStyles = makeStyles({
 
 const Chat = () => {
   const userdetails = useSelector((state) => state.admin.userDetails);
-
+  const token = useSelector((state) => state.admin.userToken);
   const location = useLocation();
   const [messages, setMessages] = useState([]);
   const [session, setsession] = useState({});
@@ -105,7 +106,11 @@ const Chat = () => {
 
   async function getsession() {
     try {
-      const res = await axiosUserInstance.post("/chatmessage", { sessionId });
+      const res = await axiosUserInstance.post("/chatmessage", { sessionId },{headers: {
+        'authorization': token,
+        'Accept' : 'application/json', 
+        'Content-Type': 'application/json'
+    } });
       console.log(res.data);
       setsession(res.data.session);
       setMessages(res.data.session.messages);

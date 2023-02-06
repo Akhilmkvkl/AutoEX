@@ -32,7 +32,7 @@ function ActivateEmail() {
             height="258"
             viewBox="0 0 258 258"
           >
-            {/* Check mark  */}
+           
             <motion.path
               transform="translate(60 85)"
               d="M3 50L45 92L134 3"
@@ -41,7 +41,7 @@ function ActivateEmail() {
               strokeWidth={8}
               style={{ pathLength: checkmarkPathLength }}
             />
-            {/* Circle */}
+           
             <motion.path
               d="M 130 6 C 198.483 6 254 61.517 254 130 C 254 198.483 198.483 254 130 254 C 61.517 254 6 198.483 6 130 C 6 61.517 61.517 6 130 6 Z"
               fill="transparent"

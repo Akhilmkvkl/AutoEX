@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 
 
 function ExpertSession() {
+
+    const token=useSelector((state)=>state.admin.userToken)
     const userdetails = useSelector((state) => state.admin.userDetails);
     const [date, setDate] = React.useState(dayjs(Date.now()));
     const [dateDb, seDateDb] = useState([])
@@ -27,7 +29,13 @@ function ExpertSession() {
     }
     const handleSave = async () => {
         const expertid=userdetails._id
-        axiosUserInstance.post('/addAvailability',{expertid,date})
+        axiosUserInstance.post('/addAvailability',{expertid,date},{
+            headers: {
+                'authorization': token,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+            })
         getDate()
     }
     const handleClose = async (index) => {
@@ -60,7 +68,7 @@ function ExpertSession() {
         <>
 
             <div className='font-bold text-3xl mt-32 text-center'>Manage your sessions here !</div>
-            {/* <hr className='h-2 mt-2 mb-6 w-60 my-0 rounded border-0 mx-auto bg-green-400' /> */}
+            
 
             <div className='flex justify-center flex-wrap'>
                 <div className='text-2xl mt-4  text-center'>Pick your available dates : </div>
@@ -89,7 +97,7 @@ function ExpertSession() {
 
 
             <div className='text-2xl mt-4 pb-1 text-center'>Picked dates</div>
-            {/* <hr className='h-1  mb-6 w-60 my-0 rounded border-0 mx-auto bg-green-400' /> */}
+          
             <div className="flex flex-wrap">
                 {
                     dateDb.map((item, index) => {
@@ -105,7 +113,7 @@ function ExpertSession() {
                             < div className="ml-16 mb-4 w-60 p-4 bg-white border rounded-xl text-gray-800 space-y-2" >
                                 <div className="flex justify-between">
                                     <div className="text-gray-400 text-xs"></div>
-                                    {/* <div className="text-gray-400 text-xs">4h</div> */}
+                                   
                                     <button className="text-gray-600 hover:text-gray-800" onClick={() => handleClose(index)} >
                                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -126,7 +134,7 @@ function ExpertSession() {
                 }
             </div>
 
-            {/* <div className='text-2xl mt-4 pb-1 text-center'>Upcoming Sessions</div> */}
+         
             
 
             

@@ -226,8 +226,8 @@ function AdminNews() {
                   <CardActions>
                    
                     <Button
-                      size="middle"
-                      className={`bg-green-500 text-white rounded-lg px-4 py-2`}
+                      
+                      className={`bg-green-500 text-white `}
                       onClick={() => handleUnlist(news)}
                     >
                       Unlist
@@ -282,21 +282,15 @@ function AdminNews() {
                   <CardActions>
                     <Button
                       size="middle"
-                      className={`bg-blue-500 text-white rounded-lg px-4 py-2`}
+                      className={`bg-blue-500 text-white `}
                       onClick={() => handlelist(news)}
                     >
                       List
                     </Button>
-                    {/* <Button
-                      size="middle"
-                      className={`bg-green-500 text-white rounded-lg px-4 py-2`}
-                      onClick={() => onUnlist(news.id)}
-                    >
-                      Unlist
-                    </Button> */}
+                  
                     <Button
                       size="middle"
-                      className={`bg-red-500 text-white rounded-lg px-4 py-2`}
+                      className={`bg-red-500 text-white`}
                       onClick={() => handleDelete(news)}
                     >
                       Delete

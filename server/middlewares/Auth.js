@@ -4,11 +4,11 @@ const jwt= require('jsonwebtoken')
 
 const Auth=(req,res,next)=>{
     try {
-         const token=req.header("Authorization")
+         const token=req.header("authorization")
          console.log(token,"this is token")
          if(!token){
          return res.status(400).json({msg:"Invalid Authentication"})
-            
+               
          }
          
          jwt.verify(token,process.env.Refresh_token_secret,(err,user)=>{

@@ -10,9 +10,10 @@ import {  CardActionArea, CardActions } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Input, Button, Select } from 'antd';
+import { Input, Button, Select,Skeleton } from 'antd';
 
 function Vehicles() {
+  // <Skeleton active />
   const navigate = useNavigate();
   const [Vehicle, setvehicle] = useState([]);
   const [vehicleBrand, setvehicleBrand] = useState([]);
@@ -63,6 +64,26 @@ function Vehicles() {
     const handleSearch = (value) => {
       setFilters({ ...filters, search: value });
     };
+    const vehicletype = [
+      {
+        type: "SUV",
+      },
+      {
+        type: "Hatchback",
+      },
+      {
+        type: "Sedan",
+      },
+      {
+        type: "Micro Suv",
+      },
+      {
+        type: "MPV",
+      },
+      {
+        type:"Offroader"
+      }
+    ];
 
     const handleApplyFilters = () => {
       let filtered = Vehicle;
@@ -102,7 +123,7 @@ function Vehicles() {
         >
           <img
             className="ImgNews"
-            src="https://wallpapercave.com/wp/wp11019599.jpg"
+            src="https://wallpapers.com/images/featured/ferrari-cglqdk3qgwuhk35k.jpg"
             alt=""
           />
         </MovingComponent>
@@ -129,7 +150,7 @@ function Vehicles() {
             placeholder="Brand"
             value={filters.brand}
             onChange={handleBrandFilter}
-            style={{width:"15em"}}
+            style={{width:"20vw"}}
           >
             <Option value="">All</Option>
             {vehicleBrand.map((brand)=>{
@@ -143,13 +164,17 @@ function Vehicles() {
             placeholder="Type"
             value={filters.type}
             onChange={handleTypeFilter}
-            style={{width:300}}
+            style={{width:"20vw"}}
           >
             <Option value="">All</Option>
-            <Option value="Sedan">Sedan</Option>
-            <Option value="SUV">SUV</Option>
-            <Option value="Pickup">Hatchback</Option>
-            <Option value="Electric">Micro Suv</Option>
+            {vehicletype.map((typeis)=>{
+
+              return (
+                <Option value={typeis.type}>{typeis.type}</Option>
+              )
+            })}
+            
+          
           </Select>
           <Input
             className="mr-2"
@@ -165,7 +190,7 @@ function Vehicles() {
         
       </div>
 
-      <div className=" flex flex-wrap grid-cols-3 gap-3 ">
+      <div className=" flex flex-wrap grid-cols-3 gap-3 mt-40 ">
         {filteredVehicles.map((vehicles) => {
           return (
             <div
@@ -174,7 +199,7 @@ function Vehicles() {
                 vewVehicle(vehicles);
               }}
             >
-              <Card sx={{ maxWidth: 345 }}>
+              <Card sx={{ maxWidth: 345 }} style={{height:350}}>
                 <CardActionArea>
                   <CardMedia
                     component="img"

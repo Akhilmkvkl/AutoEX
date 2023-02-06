@@ -3,10 +3,12 @@
 }
 .video {
   margin-top: 2em;
-  margin-left: 20em;
+  /* margin-left: 20em; */
+  /* width: 3vw; */
 }
 .spec-table {
   width: 50vw;
   align-content: left;
   margin-right: 40em;
 }
+

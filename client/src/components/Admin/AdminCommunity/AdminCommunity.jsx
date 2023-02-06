@@ -124,7 +124,7 @@ function AdminCommunity() {
     async function getCommunity() {
       try {
         const comm = await axiosAdminInstance.get("/community");
-        // console.log(auto);
+        
         setcommunity(comm.data.community);
       } catch (error) {
         console.log(error);
@@ -145,7 +145,7 @@ function AdminCommunity() {
   const [filters, setFilters] = useState({
     name: "",
     platform: "",
-    // Brand: "",
+    
   });
 
   async function deletecommunity(id){
@@ -168,9 +168,7 @@ function AdminCommunity() {
     const typeMatch = community.platform
       .toLowerCase()
       .includes(filters.platform.toLowerCase());
-    // const brandMatch = car.Brand.toLowerCase().includes(
-    //   filters.Brand.toLowerCase()
-    // );
+  
     return nameMatch && typeMatch;
   });
 

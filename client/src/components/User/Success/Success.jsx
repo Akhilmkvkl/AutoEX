@@ -6,12 +6,18 @@ import { useSelector } from "react-redux";
 
 
 function Success() {
+  const token = useSelector((state) => state.admin.userToken);
   const userdetails = useSelector((state) => state.admin.userDetails);
  async function confirm(){
    try {
     const succesurl=window.location.href
     console.log(succesurl)
-   const res= await  axiosUserInstance.post('/paymentsucces',{succesurl,userdetails})
+   const res= await  axiosUserInstance.post('/paymentsucces',{succesurl,userdetails},{headers: {
+    'authorization': token,
+    'Accept' : 'application/json', 
+    'Content-Type': 'application/json'
+} 
+})
    console.log(res)
    } catch (error) {
     

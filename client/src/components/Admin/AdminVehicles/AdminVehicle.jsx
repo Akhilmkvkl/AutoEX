@@ -257,7 +257,7 @@ function AdminVehicle() {
                             brand.blocked === true ? "secondary" : "primary"
                           }
                           onClick={() => {
-                            // Implement block/unblock logic here
+                           
                           }}
                         >
                           {brand.blocked === true ? (
@@ -291,7 +291,7 @@ function AdminVehicle() {
         />
         <Link to={"/AddVehicle"}>
           {" "}
-          <Button>Add vehicle</Button>
+          <Button className="ml-4" type="primary">Add vehicle</Button>
         </Link>
       </div>
       <div>

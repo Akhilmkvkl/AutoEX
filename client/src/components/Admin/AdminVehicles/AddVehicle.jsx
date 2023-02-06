@@ -36,6 +36,9 @@ function AddVehicle() {
     {
       type: "MPV",
     },
+    {
+      type:"Offroader"
+    }
   ];
 
   useEffect(() => {
