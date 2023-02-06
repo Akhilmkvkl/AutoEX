@@ -68,7 +68,9 @@ function Communities() {
               <Title color="red" level={4}>
                <p className="text-red-600">{communities.name}</p> 
               </Title>
+              <div style={{height:120}}>
               <p>{communities.decription}</p>
+              </div>
               <p className="text-red-600"> {communities.platform}</p>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
