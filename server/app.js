@@ -47,6 +47,14 @@ const io = require("socket.io")(server, {
 });
 
 
+// Making Build Folder as Public 
+app.use(express.static(path.join(__dirname, '../client/build/')));
+
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  });
+
 // const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {

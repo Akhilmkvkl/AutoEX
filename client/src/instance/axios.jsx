@@ -1,13 +1,13 @@
 import axios from "axios";
 
 export const axiosUserInstance = axios.create({
-    baseURL: "http://localhost:4000/users"
+    baseURL: "/users"
 })
 
 export const axiosExpertInstance = axios.create({
-    baseURL: "http://localhost:4000/expert"
+    baseURL: "/expert"
 })
 
 export const axiosAdminInstance = axios.create({
-    baseURL: "http://localhost:4000/admin"
+    baseURL: "/admin"
 })
