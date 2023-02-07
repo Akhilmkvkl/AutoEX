@@ -61,12 +61,10 @@ io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   socket.on("sendMessage",async (data) => { 
-    //  console.log(data)
-     
-    //  console.log(data[1]);
+   
      const message = data[0];
      const sessionid = data[1];
-    //  console.log(sessionid.sessionId);
+   
       
      const session = await Session.findOne({
        _id: ObjectId(sessionid.sessionId),
@@ -91,7 +89,7 @@ io.on("connection", (socket) => {
 
 
 mongoose
-  .connect("mongodb://localhost:27017/autoEX")
+  .connect(process.env.Database)
   .then(() => {
     console.log("Database connected");
   })
