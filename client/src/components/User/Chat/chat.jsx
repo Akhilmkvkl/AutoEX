@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { axiosUserInstance } from "../../../instance/axios";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-const socket = require("socket.io-client")("http://localhost:4000", {
+const socket = require("socket.io-client")("/", {
   rejectUnauthorized: false // WARN: please do not do this in production
 });
 // const socket = io("");
