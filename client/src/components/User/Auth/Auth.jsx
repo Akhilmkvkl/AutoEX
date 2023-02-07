@@ -19,6 +19,7 @@ import {
   isLength,
   isMatch,
 } from "../../Utils/Validation/Validation";
+import { axiosUserInstance } from "../../../instance/axios";
 
 //login
 
@@ -65,7 +66,7 @@ function Auth() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:4000/users/login", {
+      const res = await axiosUserInstance.post("/login", {
         email,
         password,
       });
@@ -121,7 +122,7 @@ function Auth() {
       })
     }else{
     try {
-      const res = await axios.post("http://localhost:4000/users/register", {
+      const res = await axiosUserInstance.post("/register", {
         username,
         useremail,
         userpassword,
