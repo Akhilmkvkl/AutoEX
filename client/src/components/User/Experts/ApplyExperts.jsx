@@ -165,7 +165,14 @@ function ApplyExperts() {
               />
             </Form.Item>
               
-            <Form.Item name="Avatar" label="Photo">
+            <Form.Item 
+            rules={[
+              {
+                required: true,
+                message: "Please upload image",
+              },
+            ]}
+            name="Avatar" label="Photo">
               <Upload
                 name="avatar"
                 valuePropName="profile"
@@ -185,7 +192,13 @@ function ApplyExperts() {
               </Upload>
             </Form.Item>
 
-            <Form.Item name="Documents" label="Documents">
+            <Form.Item name="Documents" label="Documents" 
+            rules={[
+              {
+                required: true,
+                message: "Please upload image",
+              },
+            ]}>
               <Upload
                 name="Documents"
                 valuePropName="fileList"

@@ -17,6 +17,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import CheckIcon from "@material-ui/icons/Check";
 import BlockIcon from "@material-ui/icons/Block";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles({
   table: {
@@ -36,10 +38,22 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
       onOk={() => {
         form
           .validateFields()
-          .then((values) => {
+          .then(async(values) => {
             form.resetFields();
             console.log(values);
-            axiosAdminInstance.post("/addbrands", { values });
+           const res= await axiosAdminInstance.post("/addbrands", { values });
+           if(res){
+            toast.success(' Brand added successfully', {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              });
+           }
           })
           .catch((info) => {
             console.log("Validate Failed:", info);
@@ -209,6 +223,7 @@ function AdminVehicle() {
 
   return (
     <div className="mt-32 ml-10">
+       <ToastContainer />
       <div>
         <Button
           className="mr-4"

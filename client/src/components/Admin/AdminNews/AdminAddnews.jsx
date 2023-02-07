@@ -18,6 +18,8 @@ import { message } from "antd";
 import { axiosAdminInstance, axiosUserInstance } from "../../../instance/axios";
 import { showSuccessMsg } from "../../Utils/Notifications/Notification";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AdminAddnews() {
   const { TextArea } = Input;
@@ -63,10 +65,16 @@ function AdminAddnews() {
       console.log(res);
       if (res) {
         form.resetFields();
-        setsuccess(true);
-        setTimeout(() => {
-          setsuccess(false);
-        }, 5000);
+        toast.success(' News added successfully', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          });
       }
     } catch (error) {
       console.log(error.error);
@@ -75,6 +83,7 @@ function AdminAddnews() {
 
   return (
     <div className="mt-48 ">
+      <ToastContainer />
       <>
         <div className="w-48">
           {success == true && showSuccessMsg("successfully updated the news")}
