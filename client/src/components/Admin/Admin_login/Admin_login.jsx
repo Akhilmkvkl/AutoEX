@@ -9,6 +9,7 @@ import {useDispatch} from'react-redux';
 import {adminLoginDetails} from '../../../Redux/adminReducer'
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { axiosAdminInstance } from '../../../instance/axios';
 
 function Admin_login() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ function Admin_login() {
       const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          const res = await axios.post("http://localhost:4000/admin/login", {
+          const res = await axiosAdminInstance.post("/login", {
             email,
             password,
           });
