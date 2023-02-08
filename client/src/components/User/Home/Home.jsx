@@ -52,7 +52,7 @@ function Home() {
             iteration="1"
             fillMode="none"
           >
-            <h1 className="text" style={{fontWeight:900,color:"white"}}>
+            <h1 className="text" style={{color:"white"}}>
               Find Your Best choice
               <br /> With Us 
             </h1>
