@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 function Reviews(props) {
   const userdetails = useSelector((state) => state.admin.userDetails);
   console.log(props,"this is props")
@@ -49,10 +50,11 @@ function Reviews(props) {
           form
             .validateFields()
             .then((values) => {
-              form.resetFields();
+              
              const res= axiosUserInstance.post('/postreview',{values,cardetails,userdetails})
              if(res){
-              toast.error("! The selected date  in the past.", {
+              form.resetFields()
+              toast.success("Review posted", {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -62,6 +64,7 @@ function Reviews(props) {
                 progress: undefined,
                 theme: "colored",
               });
+              getreview()
       
              }
               

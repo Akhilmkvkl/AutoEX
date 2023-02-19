@@ -376,7 +376,7 @@ function Experts() {
                   }
                   return (
                     <Card
-                      style={{ maxWidth: 300, marginLeft: "26px"}}
+                      style={{ maxWidth: 300, marginLeft: "26px" ,marginBottom:'26px'}}
                       actions={[
                        
                         <ChatIcon onClick={() => {

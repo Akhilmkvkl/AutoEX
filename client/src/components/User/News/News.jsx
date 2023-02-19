@@ -12,6 +12,7 @@ function News() {
   const navigate = useNavigate();
   const [news, setnews] = useState([]);
   
+   
  
 
   useEffect(() => {

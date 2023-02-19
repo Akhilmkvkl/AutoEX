@@ -123,7 +123,7 @@ function Header() {
         )}
       </ul>
     </div>
-    <div className="w-1/3 md:hidden">
+    <div className="w-1/3 md:hidden" style={{right:2}}>
       <button
         className="flex items-center px-3 py-2 text-black rounded"
         onClick={toggleMenu}

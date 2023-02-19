@@ -37,7 +37,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
       onCancel={onCancel}
       onOk={() => {
         form
-          .validateFields()
+          .validateFields() 
           .then(async(values) => {
             form.resetFields();
             console.log(values);
